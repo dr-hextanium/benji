@@ -30,7 +30,7 @@ class PIDFController(
     }
 
     fun target(setpoint: Double): PIDFController {
-        this.target = setpoint;
+        this.target = setpoint
         reset()
 
         return this

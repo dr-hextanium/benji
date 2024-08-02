@@ -38,8 +38,6 @@ object Angle {
         return modifiedAngleDelta
     }
 
-    object Extensions {
-        val Double.deg get() = Math.toRadians(this)
-        val Int.deg get() = (this.toDouble()).deg
-    }
+    val Double.deg get() = Math.toRadians(this)
+    val Int.deg get() = (this.toDouble()).deg
 }
