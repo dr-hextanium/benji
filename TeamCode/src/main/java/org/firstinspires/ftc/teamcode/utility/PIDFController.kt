@@ -1,16 +1,23 @@
 package org.firstinspires.ftc.teamcode.utility
 
 class PIDFController(
-    private val kP: Double,
-    private val kI: Double,
-    private val kD: Double,
-    private val kF: Double
+    private var kP: Double,
+    private var kI: Double,
+    private var kD: Double,
+    private var kF: Double
 ) {
     private var before = System.nanoTime()
 
     private var target = 0.0
     private var lastError = 0.0
     private var integral = 0.0
+
+    fun coeffs(p: Double = kP, i: Double = kI, d: Double = kD, f: Double = kF) {
+        kP = p
+        kI = i
+        kD = d
+        kF = f
+    }
 
     fun reset() {
         lastError = 0.0
