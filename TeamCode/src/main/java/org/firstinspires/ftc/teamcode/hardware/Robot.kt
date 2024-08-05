@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.hardware.devices.AbsoluteAnalogEncoder
+import org.firstinspires.ftc.teamcode.hardware.devices.CachingDcMotor
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ISubsystem
 
 /**
@@ -23,10 +24,10 @@ object Robot : ISubsystem {
     lateinit var hw: HardwareMap
 
     object Motors {
-        lateinit var fr: DcMotor
-        lateinit var fl: DcMotor
-        lateinit var br: DcMotor
-        lateinit var bl: DcMotor
+        lateinit var fr: CachingDcMotor
+        lateinit var fl: CachingDcMotor
+        lateinit var br: CachingDcMotor
+        lateinit var bl: CachingDcMotor
 
         fun all() = listOf(fr, fl, br, bl)
     }
@@ -53,10 +54,10 @@ object Robot : ISubsystem {
         this.telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
         this.hw = hw
 
-        Motors.fr = hw["front right drive"] as DcMotor
-        Motors.fl = hw["front left drive"] as DcMotor
-        Motors.br = hw["back right drive"] as DcMotor
-        Motors.bl = hw["back left drive"] as DcMotor
+        Motors.fr = CachingDcMotor(hw["front right drive"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
+        Motors.fl = CachingDcMotor(hw["front left drive"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
+        Motors.br = CachingDcMotor(hw["back right drive"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
+        Motors.bl = CachingDcMotor(hw["back left drive"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
 
         Servos.fr = hw["front right steer"] as CRServo
         Servos.fl = hw["front left steer"] as CRServo

@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.hardware.drive.swerve.SwerveModule.ModuleC
 import org.firstinspires.ftc.teamcode.hardware.drive.swerve.SwerveModule.ModuleConfig.I
 import org.firstinspires.ftc.teamcode.hardware.drive.swerve.SwerveModule.ModuleConfig.D
 import org.firstinspires.ftc.teamcode.hardware.drive.swerve.SwerveModule.ModuleConfig.F
-import org.firstinspires.ftc.teamcode.hardware.drive.swerve.SwerveModule.ModuleConfig.MOTOR_FLIPPING
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ISubsystem
 import org.firstinspires.ftc.teamcode.utility.PIDFController
 import org.firstinspires.ftc.teamcode.utility.geometry.Angle.deg
@@ -54,7 +53,7 @@ class SwerveModule(
     override fun read() { position = encoder.position }
 
     override fun update() {
-        flipped = MOTOR_FLIPPING && abs(error) > 90.deg
+        flipped = abs(error) > 90.deg
 
         if (flipped) target = normalizeRadians(target - PI)
     }
@@ -79,8 +78,5 @@ class SwerveModule(
         val D = 0.0
         @JvmField
         val F = 0.0
-
-        @JvmField
-        val MOTOR_FLIPPING = true
     }
 }

@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.utility.geometry.Vector2D.Extensions.left_
  * Global configuration for all robot state.
  */
 object Globals {
+    const val DRIVE_MOTOR_THRESHOLD = 0.005
+
     fun gamepadAsPose(gamepad: Gamepad): Pose2D {
         val velocity = gamepad.left_stick_vector
         val omega = (gamepad.right_trigger - gamepad.left_trigger).toDouble()
