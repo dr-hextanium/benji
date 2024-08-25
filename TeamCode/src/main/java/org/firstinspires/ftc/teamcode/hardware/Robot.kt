@@ -1,13 +1,19 @@
 package org.firstinspires.ftc.teamcode.hardware
 
 import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.teamcode.hardware.Robot.Servos.Offsets.bl
+import org.firstinspires.ftc.teamcode.hardware.Robot.Servos.Offsets.br
+import org.firstinspires.ftc.teamcode.hardware.Robot.Servos.Offsets.fl
+import org.firstinspires.ftc.teamcode.hardware.Robot.Servos.Offsets.fr
 import org.firstinspires.ftc.teamcode.hardware.devices.AbsoluteAnalogEncoder
 import org.firstinspires.ftc.teamcode.hardware.devices.CachingDcMotor
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ISubsystem
@@ -38,6 +44,18 @@ object Robot : ISubsystem {
         lateinit var br: CRServo
         lateinit var bl: CRServo
 
+        @Config
+        object Offsets {
+            @JvmField
+            var fr = 0.0
+            @JvmField
+            var fl = 0.0
+            @JvmField
+            var br = 0.0
+            @JvmField
+            var bl = 0.0
+        }
+
         fun all() = listOf(fr, fl, br, bl)
     }
 
@@ -65,9 +83,13 @@ object Robot : ISubsystem {
         Servos.bl = hw["back left steer"] as CRServo
 
         AnalogEncoders.fr = AbsoluteAnalogEncoder(hw["front right encoder"] as AnalogInput)
+            .zero(fr)
         AnalogEncoders.fl = AbsoluteAnalogEncoder(hw["front left encoder"] as AnalogInput)
+            .zero(fl)
         AnalogEncoders.br = AbsoluteAnalogEncoder(hw["back right encoder"] as AnalogInput)
+            .zero(br)
         AnalogEncoders.bl = AbsoluteAnalogEncoder(hw["back left encoder"] as AnalogInput)
+            .zero(bl)
     }
 
     override fun reset() {
@@ -79,7 +101,10 @@ object Robot : ISubsystem {
     }
 
     override fun update() {
-        TODO("Not yet implemented")
+        AnalogEncoders.fr.zero(fr)
+        AnalogEncoders.fl.zero(fl)
+        AnalogEncoders.br.zero(br)
+        AnalogEncoders.bl.zero(bl)
     }
 
     override fun write() {

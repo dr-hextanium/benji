@@ -40,4 +40,7 @@ object Angle {
 
     val Double.deg get() = Math.toRadians(this)
     val Int.deg get() = (this.toDouble()).deg
+
+    val Double.rad get() = Math.toDegrees(this)
+    val Int.rad get() = (this.toDouble()).rad
 }

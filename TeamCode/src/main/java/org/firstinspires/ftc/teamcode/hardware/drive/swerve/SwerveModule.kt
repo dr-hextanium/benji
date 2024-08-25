@@ -36,7 +36,7 @@ class SwerveModule(
 
     var flipped = false
 
-    var drivePower = 0.0
+    var drive = 0.0
 
     init {
         motor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
@@ -59,24 +59,24 @@ class SwerveModule(
     }
 
     override fun write() {
-        motor.power = drivePower
+        motor.power = drive
 
         servo.power = controller.coeffs(P, I, D, F)
             .target(error)
             .calculate(0.0)
     }
 
-    fun setDrivePower(power: Double) { drivePower = power }
+    fun setDrivePower(power: Double) { drive = power * if (flipped) -1.0 else 1.0 }
 
     @Config
     object ModuleConfig {
         @JvmField
-        val P = 0.0
+        var P = 0.1
         @JvmField
-        val I = 0.0
+        var I = 0.0
         @JvmField
-        val D = 0.0
+        var D = 0.0
         @JvmField
-        val F = 0.0
+        var F = 0.0
     }
 }

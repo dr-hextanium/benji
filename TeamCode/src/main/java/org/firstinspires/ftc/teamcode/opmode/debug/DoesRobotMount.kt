@@ -8,6 +8,8 @@ import kotlin.math.sin
 
 @TeleOp(group = "Debug")
 class DoesRobotMount : BasedOpMode() {
+    override fun initialize() { }
+
     override fun loop() {
         Robot.Motors.fl.power = sin(runtime) / 2.0
 
