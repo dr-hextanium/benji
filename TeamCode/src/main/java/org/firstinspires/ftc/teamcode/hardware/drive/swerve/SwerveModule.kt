@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.drive.swerve.SwerveModule.ModuleC
 import org.firstinspires.ftc.teamcode.hardware.drive.swerve.SwerveModule.ModuleConfig.D
 import org.firstinspires.ftc.teamcode.hardware.drive.swerve.SwerveModule.ModuleConfig.F
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ISubsystem
-import org.firstinspires.ftc.teamcode.utility.PIDFController
+import org.firstinspires.ftc.teamcode.utility.motion.controller.PIDFController
 import org.firstinspires.ftc.teamcode.utility.geometry.Angle.deg
 import kotlin.math.PI
 import kotlin.math.abs

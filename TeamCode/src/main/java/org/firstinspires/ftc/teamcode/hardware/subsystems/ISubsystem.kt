@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware.subsystems
 
+import com.arcrobotics.ftclib.command.Subsystem
+
 /**
  * Following the KookyBotz[1] model for the loop-time optimization of subsystems,
  * we have `ISubsystem`. The idea is that subsystems sequence and isolate all of their
@@ -20,7 +22,7 @@ package org.firstinspires.ftc.teamcode.hardware.subsystems
  *
  * [1] While I am unsure of if KookyBotz pioneered this model, they are attributed to it.
  */
-interface ISubsystem {
+interface ISubsystem : Subsystem {
     /**
      * Reset all hardware and state associated with this subsystem.
      * Should perform exactly the same as an initialization method.

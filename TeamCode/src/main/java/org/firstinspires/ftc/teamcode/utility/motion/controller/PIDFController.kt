@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.utility
+package org.firstinspires.ftc.teamcode.utility.motion.controller
 
 class PIDFController(
     private var kP: Double,

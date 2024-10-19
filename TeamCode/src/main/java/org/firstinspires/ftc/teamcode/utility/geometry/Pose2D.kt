@@ -14,5 +14,7 @@ data class Pose2D(val position: Vector2D, val heading: Double) {
             get() = Globals.gamepadAsPose(this)
     }
 
+    fun rotate(theta: Double) = Pose2D(position.rotate(theta), heading)
+
     override fun toString() = "Pose2D(x = $x, y = $y, heading = $heading)"
 }
