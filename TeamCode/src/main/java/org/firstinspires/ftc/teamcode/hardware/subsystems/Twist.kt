@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.hardware.subsystems
 
 import com.qualcomm.robotcore.hardware.Servo
 
-class Twist(val servo: Servo, val offset: Double) : ISubsystem {
-	var position = offset
+class Twist(override val servo: Servo, val offset: Double) : ISubsystem, IPositionable {
+	override var position = 0.0
 
 	override fun reset() = write()
 
@@ -11,5 +11,7 @@ class Twist(val servo: Servo, val offset: Double) : ISubsystem {
 
 	override fun update() {  }
 
-	override fun write() { servo.position = position + offset }
+	override fun write() {
+		servo.position = position + offset
+	}
 }

@@ -10,4 +10,14 @@ abstract class BasedOpMode : OpMode() {
         Robot.init(hardwareMap, telemetry)
         initialize()
     }
+
+    abstract fun cycle()
+
+    override fun loop() {
+        Robot.read()
+        Robot.update()
+        Robot.write()
+
+        cycle()
+    }
 }
