@@ -7,6 +7,10 @@ interface IPositionable {
 	var position: Double
 	val servo: Servo
 
-	fun bound(lower: Double, upper: Double) = servo.scaleRange(lower, upper)
+	fun bound(lower: Double, upper: Double) {
+		servo.scaleRange(lower, upper)
+	}
 	fun bound(bound: Globals.Bounds.Bound) = bound(bound.lower, bound.upper)
+
+	fun write() { servo.position = position }
 }

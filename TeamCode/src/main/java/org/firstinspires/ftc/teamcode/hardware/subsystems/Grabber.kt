@@ -6,16 +6,21 @@ class Grabber(
 	val wrist: Wrist,
 	val elbow: Elbow
 ) : ISubsystem {
-	override fun reset() {
+	private fun all() = listOf(claw, twist, wrist, elbow) as List<ISubsystem>
 
+	override fun reset() {
+		all().forEach { it.reset() }
 	}
 
 	override fun read() {
+		all().forEach { it.read() }
 	}
 
 	override fun update() {
+		all().forEach { it.update() }
 	}
 
 	override fun write() {
+		all().forEach { it.write() }
 	}
 }

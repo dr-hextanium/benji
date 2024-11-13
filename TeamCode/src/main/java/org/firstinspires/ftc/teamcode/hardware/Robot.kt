@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandScheduler
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
+import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.hardware.devices.CachingDcMotor
@@ -41,7 +42,7 @@ object Robot : ISubsystem {
 			lateinit var elbow:   Elbow
 
 //			fun all() = listOf(grabber, claw, twist, wrist, elbow)
-			fun all() = listOf(twist, claw) as List<ISubsystem>
+			fun all() = listOf(wrist, elbow) as List<ISubsystem>
 		}
 
 		fun all(): List<ISubsystem> = listOf(front, back)
@@ -83,20 +84,22 @@ object Robot : ISubsystem {
 		this.telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
 		this.hw = hw
 
-//		Motors.fr = CachingDcMotor(hw["front right drive"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
-//		Motors.fl = CachingDcMotor(hw["front left drive"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
-//		Motors.br = CachingDcMotor(hw["back right drive"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
-//		Motors.bl = CachingDcMotor(hw["back left drive"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
+		Motors.fr = CachingDcMotor(hw["frontRight"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
+		Motors.fl = CachingDcMotor(hw["frontLeft"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
+		Motors.br = CachingDcMotor(hw["backRight"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
+		Motors.bl = CachingDcMotor(hw["backLeft"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
 
 		Servos.frontClaw = hw["frontClaw"] as ServoImplEx
 		Servos.frontTwist = hw["frontTwist"] as ServoImplEx
-//        Servos.frontWrist = hw["frontWrist"] as ServoImplEx
-//        Servos.frontElbow = hw["frontElbow"] as ServoImplEx
+        Servos.frontWrist = hw["frontWrist"] as ServoImplEx
+        Servos.frontElbow = hw["frontElbow"] as ServoImplEx
 
-		Subsystems.front.claw = Claw(Servos.frontClaw)
-		Subsystems.front.twist = Twist(Servos.frontTwist, 0.0)
-//		Subsystems.front.wrist = Wrist(Servos.frontWrist)
-//		Subsystems.front.elbow = Elbow(Servos.frontElbow)
+		Subsystems.front.claw = Claw(Servos.frontClaw, Globals.Bounds.Front.twist)
+		Subsystems.front.twist = Twist(Servos.frontTwist, Globals.Bounds.Front.claw)
+		Subsystems.front.wrist = Wrist(Servos.frontWrist, Globals.Bounds.Front.wrist)
+		Subsystems.front.elbow = Elbow(Servos.frontElbow, Globals.Bounds.Front.elbow)
+
+		Subsystems.front.wrist.servo.direction = Servo.Direction.REVERSE
 
 		scheduler.registerSubsystem(*Subsystems.all().toTypedArray())
 
@@ -106,9 +109,6 @@ object Robot : ISubsystem {
 	override fun reset() {
 		scheduler.reset()
 		Subsystems.all().forEach { it.reset() }
-
-		Subsystems.front.twist.bound(Globals.Bounds.Front.twist)
-		Subsystems.front.claw.bound(Globals.Bounds.Front.claw)
 	}
 
 	override fun read() {

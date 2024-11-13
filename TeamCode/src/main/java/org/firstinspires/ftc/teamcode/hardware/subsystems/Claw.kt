@@ -1,24 +1,24 @@
 package org.firstinspires.ftc.teamcode.hardware.subsystems
 
 import com.qualcomm.robotcore.hardware.Servo
+import org.firstinspires.ftc.teamcode.hardware.Globals
 
-// open and close
-class Claw(override val servo: Servo) : ISubsystem, IPositionable {
+class Claw(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsystem, IPositionable {
 	override var position = 0.0
 
-	override fun reset() = write()
+	override fun reset() {
+		bound(bound)
+		write()
+	}
 
 	override fun read() { }
 
 	override fun update() { }
 
-	override fun write() { servo.position = position }
+	override fun write() = super.write()
 
-	fun open() { position = State.OPEN.position }
-	fun close() { position = State.CLOSED.position }
-
-	enum class State(val position: Double) {
-		OPEN(0.0),
-		CLOSED(0.0)
+	companion object {
+		const val OPEN = 0.0
+		const val CLOSED = 1.0
 	}
 }

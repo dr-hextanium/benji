@@ -1,20 +1,24 @@
 package org.firstinspires.ftc.teamcode.hardware.subsystems
 
 import com.qualcomm.robotcore.hardware.Servo
+import org.firstinspires.ftc.teamcode.hardware.Globals
 
-class Elbow(val servo: Servo) : ISubsystem {
-	var state = State.DOWN
+class Elbow(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsystem, IPositionable {
+	override var position = 0.0
 
-	override fun reset() = write()
+	override fun reset() {
+		bound(bound)
+		write()
+	}
 
-	override fun read() {  }
+	override fun read() { }
 
-	override fun update() {  }
+	override fun update() { }
 
-	override fun write() { servo.position = state.position }
+	override fun write() = super.write()
 
-	enum class State(val position: Double) {
-		UP(0.0),
-		DOWN(0.0)
+	companion object {
+		const val TRANSFER = 1.0
+		const val DOWN = 0.0
 	}
 }

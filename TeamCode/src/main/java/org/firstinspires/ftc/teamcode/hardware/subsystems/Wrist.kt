@@ -1,22 +1,24 @@
 package org.firstinspires.ftc.teamcode.hardware.subsystems
 
 import com.qualcomm.robotcore.hardware.Servo
+import org.firstinspires.ftc.teamcode.hardware.Globals
 
-class Wrist(val servo: Servo) : ISubsystem {
-	var position = 0.0
+class Wrist(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsystem, IPositionable {
+	override var position = 0.0
 
-	override fun reset() {}
+	override fun reset() {
+		bound(bound)
+		write()
+	}
 
 	override fun read() {}
 
 	override fun update() {}
 
-	fun to(state: State) { position = state.position }
+	override fun write() = super.write()
 
-	override fun write() { servo.position = position }
-
-	enum class State(val position: Double) {
-		UP(0.0),
-		DOWN(0.0)
+	companion object {
+		const val TRANSFER = 1.0
+		const val DOWN = 0.0
 	}
 }
