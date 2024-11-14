@@ -4,11 +4,20 @@ import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandScheduler
+import com.arcrobotics.ftclib.command.button.GamepadButton
+import com.arcrobotics.ftclib.gamepad.GamepadEx
+import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.teamcode.command.core.CloseClaw
+import org.firstinspires.ftc.teamcode.command.core.ElbowPointsDown
+import org.firstinspires.ftc.teamcode.command.core.ElbowToTransfer
+import org.firstinspires.ftc.teamcode.command.core.WristPointsDown
+import org.firstinspires.ftc.teamcode.command.core.WristToTransfer
 import org.firstinspires.ftc.teamcode.hardware.devices.CachingDcMotor
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Claw
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
@@ -29,6 +38,9 @@ object Robot : ISubsystem {
 
 	lateinit var telemetry: MultipleTelemetry
 	lateinit var hw: HardwareMap
+
+	lateinit var gamepad1: GamepadEx
+	lateinit var gamepad2: GamepadEx
 
 	object Subsystems {
 		val front = GrabberSet()
@@ -80,9 +92,12 @@ object Robot : ISubsystem {
 		)
 	}
 
-	fun init(hw: HardwareMap, telemetry: Telemetry) {
+	fun init(hw: HardwareMap, telemetry: Telemetry, gamepad1: Gamepad, gamepad2: Gamepad) {
 		this.telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
 		this.hw = hw
+
+		this.gamepad1 = GamepadEx(gamepad1)
+		this.gamepad2 = GamepadEx(gamepad2)
 
 		Motors.fr = CachingDcMotor(hw["frontRight"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
 		Motors.fl = CachingDcMotor(hw["frontLeft"] as DcMotor, Globals.DRIVE_MOTOR_THRESHOLD)
@@ -98,6 +113,12 @@ object Robot : ISubsystem {
 		Subsystems.front.twist = Twist(Servos.frontTwist, Globals.Bounds.Front.claw)
 		Subsystems.front.wrist = Wrist(Servos.frontWrist, Globals.Bounds.Front.wrist)
 		Subsystems.front.elbow = Elbow(Servos.frontElbow, Globals.Bounds.Front.elbow)
+		Subsystems.front.grabber = Grabber(
+			Subsystems.front.claw,
+			Subsystems.front.twist,
+			Subsystems.front.wrist,
+			Subsystems.front.elbow
+		)
 
 		Subsystems.front.wrist.servo.direction = Servo.Direction.REVERSE
 
