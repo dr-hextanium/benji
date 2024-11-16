@@ -7,14 +7,16 @@ import org.firstinspires.ftc.teamcode.hardware.Globals
 import org.firstinspires.ftc.teamcode.hardware.Robot
 import org.firstinspires.ftc.teamcode.hardware.subsystems.IPositionable
 import org.firstinspires.ftc.teamcode.opmode.BasedOpMode
+import kotlin.math.sin
 
 @TeleOp(group = "Debug")
 class ServoRangeFinder : BasedOpMode() {
 	val lookahead = 0.005
 	var start = 0.0
 	var end = 0.5
-
-	val subsystem: IPositionable by lazy { Robot.Subsystems.front.elbow }
+//swapped wrist and twist
+	//swapped elbow and twist
+	val subsystem: IPositionable by lazy { Robot.Subsystems.back.twist }
 
 	override fun initialize() {}
 

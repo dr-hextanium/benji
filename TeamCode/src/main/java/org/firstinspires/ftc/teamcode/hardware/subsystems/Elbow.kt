@@ -20,5 +20,6 @@ class Elbow(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsy
 	companion object {
 		const val TRANSFER = 1.0
 		const val DOWN = 0.0
+		const val DEFAULT = 0.5
 	}
 }

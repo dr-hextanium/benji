@@ -5,5 +5,6 @@ import org.firstinspires.ftc.teamcode.hardware.subsystems.Claw.Companion.CLOSED
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Claw.Companion.OPEN
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Grabber
 
-class OpenClaw(grabber: Grabber) : InstantCommand({ grabber.claw.position = OPEN }, grabber)
-class CloseClaw(grabber: Grabber) : InstantCommand({ grabber.claw.position = CLOSED }, grabber)
+class OpenClaw(grabber: Grabber) : InstantCommand({ grabber.claw.position = OPEN })
+class CloseClaw(grabber: Grabber) : InstantCommand({ grabber.claw.position = CLOSED })
+

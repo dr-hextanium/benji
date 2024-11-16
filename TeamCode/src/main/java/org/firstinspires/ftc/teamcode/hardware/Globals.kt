@@ -16,9 +16,16 @@ object Globals {
     object Bounds {
         object Front {
             val twist = Bound(0.330, 0.890)
-            val claw  = Bound(0.000, 0.205)
+            val claw  = Bound(0.027, 0.479)
             val elbow = Bound(0.000, 0.800)
             val wrist = Bound(0.000, 0.960)
+        }
+
+        object Back {
+            val twist = Bound(0.00, 1.00)
+            val claw  = Bound(0.458, 1.000)
+            val elbow = Bound(0.00, 1.00)
+            val wrist = Bound(0.00, 1.00)
         }
 
         class Bound(val lower: Double, val upper: Double)

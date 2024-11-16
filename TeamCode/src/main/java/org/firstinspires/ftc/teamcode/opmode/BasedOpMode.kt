@@ -25,8 +25,8 @@ abstract class BasedOpMode : OpMode() {
 	override fun loop() {
 		Robot.read()
 		Robot.update()
-		Robot.write()
-
+		Robot.scheduler.run()
 		cycle()
+		Robot.write()
 	}
 }
