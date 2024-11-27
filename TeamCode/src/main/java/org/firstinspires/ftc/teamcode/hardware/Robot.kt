@@ -44,7 +44,7 @@ object Robot : ISubsystem {
 	lateinit var gamepad2: GamepadEx
 
 	object Subsystems {
-		val front = GrabberSet(false)
+		val front = GrabberSet()
 		val back  = GrabberSet()
 
 		class GrabberSet(val enabled: Boolean = true) {
@@ -55,7 +55,8 @@ object Robot : ISubsystem {
 			lateinit var elbow:   Elbow
 
 //			fun all() = listOf(grabber, claw, twist, wrist, elbow)
-			fun all() = listOf(twist) as List<ISubsystem>
+			// TODO: Add twist back when we figure all that out
+			fun all() = listOf(elbow, wrist, claw, twist) as List<ISubsystem>
 		}
 
 		fun all(): List<ISubsystem> = listOf(front, back)
@@ -69,7 +70,11 @@ object Robot : ISubsystem {
 		lateinit var br: CachingDcMotor
 		lateinit var bl: CachingDcMotor
 
-		fun all() = listOf(fr, fl, br, bl)
+		lateinit var extendo: CachingDcMotor
+		lateinit var pinkLift: CachingDcMotor
+		lateinit var blackLift: CachingDcMotor
+
+		fun all() = listOf(fr, fl, br, bl, extendo, pinkLift, blackLift)
 	}
 
 	object Servos {
@@ -104,6 +109,10 @@ object Robot : ISubsystem {
 //		Motors.fl = CachingDcMotor(hw["frontLeft"] as DcMotor)
 //		Motors.br = CachingDcMotor(hw["backRight"] as DcMotor)
 //		Motors.bl = CachingDcMotor(hw["backLeft"] as DcMotor)
+
+		Motors.extendo = CachingDcMotor(hw["extendo"] as DcMotor)
+		Motors.pinkLift = CachingDcMotor(hw["pinkLift"] as DcMotor)
+		Motors.blackLift = CachingDcMotor(hw["blackLift"] as DcMotor)
 
 		Servos.frontClaw = hw["frontClaw"] as ServoImplEx
 		Servos.frontTwist = hw["frontTwist"] as ServoImplEx
@@ -140,7 +149,8 @@ object Robot : ISubsystem {
 		)
 
 		Subsystems.front.wrist.servo.direction = Servo.Direction.REVERSE
-//		Subsystems.back.claw.servo.direction = Servo.Direction.REVERSE
+		Subsystems.back.wrist.servo.direction = Servo.Direction.REVERSE
+		Subsystems.back.claw.servo.direction = Servo.Direction.REVERSE
 
 		scheduler.registerSubsystem(*Subsystems.all().toTypedArray())
 

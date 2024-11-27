@@ -12,5 +12,8 @@ interface IPositionable {
 	}
 	fun bound(bound: Globals.Bounds.Bound) = bound(bound.lower, bound.upper)
 
-	fun write() { servo.position = position }
+	fun write() {
+		position = position.coerceIn(0.0..1.0)
+		servo.position = position
+	}
 }
