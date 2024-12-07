@@ -105,10 +105,10 @@ object Robot : ISubsystem {
 		this.gamepad1 = GamepadEx(gamepad1)
 		this.gamepad2 = GamepadEx(gamepad2)
 
-//		Motors.fr = CachingDcMotor(hw["frontRight"] as DcMotor)
-//		Motors.fl = CachingDcMotor(hw["frontLeft"] as DcMotor)
-//		Motors.br = CachingDcMotor(hw["backRight"] as DcMotor)
-//		Motors.bl = CachingDcMotor(hw["backLeft"] as DcMotor)
+		Motors.fr = CachingDcMotor(hw["frontRight"] as DcMotor)
+		Motors.fl = CachingDcMotor(hw["frontLeft"] as DcMotor)
+		Motors.br = CachingDcMotor(hw["backRight"] as DcMotor)
+		Motors.bl = CachingDcMotor(hw["backLeft"] as DcMotor)
 
 		Motors.extendo = CachingDcMotor(hw["extendo"] as DcMotor)
 		Motors.pinkLift = CachingDcMotor(hw["pinkLift"] as DcMotor)
