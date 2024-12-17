@@ -23,13 +23,13 @@ public class PIDFTuner extends OpMode {
 
     public static int target = 0;
 
-    private static final int ticksPerInch = 4670;
+    private static final double ticksPerInch = 4670.0;
 
     private DcMotorEx pinkLift;
     private DcMotorEx blackLift;
     private DcMotorEx liftEncoder;
 
-    private int asInches(int ticks) {
+    private double asInches(int ticks) {
         return ticks / ticksPerInch;
     }
 
@@ -40,6 +40,9 @@ public class PIDFTuner extends OpMode {
     @Override
     public void init() {
         controller = new PIDController(p, i, d);
+
+        controller.setTolerance(0.005);
+
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         pinkLift = hardwareMap.get(DcMotorEx.class, "pinkLift");
@@ -55,16 +58,23 @@ public class PIDFTuner extends OpMode {
     public void loop() {
         controller.setPID(p, i, d);
 
-        int liftPos = asInches(liftEncoder.getCurrentPosition());
+        double liftPos = asInches(liftEncoder.getCurrentPosition());
         double pid = controller.calculate(liftPos, target);
 
         double power = pid + f * Math.signum(pid);
 
-        pinkLift.setPower(power);
-        blackLift.setPower(power);
+        if (!controller.atSetPoint()) {
+            pinkLift.setPower(power);
+            blackLift.setPower(power);
+        } else {
+            pinkLift.setPower(0.0);
+            blackLift.setPower(0.0);
+        }
 
         telemetry.addData("position ", liftPos);
         telemetry.addData("target ", target);
+        telemetry.addData("pink power ", pinkLift.getPower());
+        telemetry.addData("black power ", blackLift.getPower());
         telemetry.update();
     }
 }

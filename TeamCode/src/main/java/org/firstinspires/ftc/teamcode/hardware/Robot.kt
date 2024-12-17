@@ -1,28 +1,23 @@
 package org.firstinspires.ftc.teamcode.hardware
 
 import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandScheduler
-import com.arcrobotics.ftclib.command.button.GamepadButton
 import com.arcrobotics.ftclib.gamepad.GamepadEx
-import com.arcrobotics.ftclib.gamepad.GamepadKeys
-import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.robotcore.external.Telemetry
-import org.firstinspires.ftc.teamcode.command.core.CloseClaw
-import org.firstinspires.ftc.teamcode.command.core.ElbowPointsDown
-import org.firstinspires.ftc.teamcode.command.core.ElbowToTransfer
-import org.firstinspires.ftc.teamcode.command.core.WristPointsDown
-import org.firstinspires.ftc.teamcode.command.core.WristToTransfer
 import org.firstinspires.ftc.teamcode.hardware.devices.CachingDcMotor
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Claw
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
+import org.firstinspires.ftc.teamcode.hardware.subsystems.Extendo
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Grabber
+import org.firstinspires.ftc.teamcode.hardware.subsystems.IExtendable
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ISubsystem
+import org.firstinspires.ftc.teamcode.hardware.subsystems.Lift
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Twist
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 
@@ -54,9 +49,11 @@ object Robot : ISubsystem {
 			lateinit var wrist:   Wrist
 			lateinit var elbow:   Elbow
 
+			lateinit var extendable: IExtendable
+
 //			fun all() = listOf(grabber, claw, twist, wrist, elbow)
 			// TODO: Add twist back when we figure all that out
-			fun all() = listOf(elbow, wrist, claw, twist) as List<ISubsystem>
+			fun all() = listOf(elbow, wrist, claw, twist, extendable)
 		}
 
 		fun all(): List<ISubsystem> = listOf(front, back)
@@ -70,11 +67,12 @@ object Robot : ISubsystem {
 		lateinit var br: CachingDcMotor
 		lateinit var bl: CachingDcMotor
 
-		lateinit var extendo: CachingDcMotor
+		lateinit var extendoMotor: CachingDcMotor
 		lateinit var pinkLift: CachingDcMotor
 		lateinit var blackLift: CachingDcMotor
 
-		fun all() = listOf(fr, fl, br, bl, extendo, pinkLift, blackLift)
+		// TODO: Add back extendoMotor when done testing
+		fun all() = listOf(fr, fl, br, bl, extendoMotor, pinkLift, blackLift)
 	}
 
 	object Servos {
@@ -105,14 +103,14 @@ object Robot : ISubsystem {
 		this.gamepad1 = GamepadEx(gamepad1)
 		this.gamepad2 = GamepadEx(gamepad2)
 
-		Motors.fr = CachingDcMotor(hw["frontRight"] as DcMotor)
-		Motors.fl = CachingDcMotor(hw["frontLeft"] as DcMotor)
-		Motors.br = CachingDcMotor(hw["backRight"] as DcMotor)
-		Motors.bl = CachingDcMotor(hw["backLeft"] as DcMotor)
+		Motors.fr = CachingDcMotor(hw["frontRight"] as DcMotorEx)
+		Motors.fl = CachingDcMotor(hw["frontLeft"] as DcMotorEx)
+		Motors.br = CachingDcMotor(hw["backRight"] as DcMotorEx)
+		Motors.bl = CachingDcMotor(hw["backLeft"] as DcMotorEx)
 
-		Motors.extendo = CachingDcMotor(hw["extendo"] as DcMotor)
-		Motors.pinkLift = CachingDcMotor(hw["pinkLift"] as DcMotor)
-		Motors.blackLift = CachingDcMotor(hw["blackLift"] as DcMotor)
+		Motors.extendoMotor = CachingDcMotor(hw["extendo"] as DcMotorEx)
+		Motors.pinkLift = CachingDcMotor(hw["pinkLift"] as DcMotorEx)
+		Motors.blackLift = CachingDcMotor(hw["blackLift"] as DcMotorEx)
 
 		Servos.frontClaw = hw["frontClaw"] as ServoImplEx
 		Servos.frontTwist = hw["frontTwist"] as ServoImplEx
@@ -123,6 +121,9 @@ object Robot : ISubsystem {
 		Subsystems.front.twist = Twist(Servos.frontTwist, Globals.Bounds.Front.twist)
 		Subsystems.front.wrist = Wrist(Servos.frontWrist, Globals.Bounds.Front.wrist)
 		Subsystems.front.elbow = Elbow(Servos.frontElbow, Globals.Bounds.Front.elbow)
+
+		Subsystems.back.extendable = Lift(Motors.pinkLift, Motors.blackLift, Motors.fr)
+		Subsystems.front.extendable = Extendo(Motors.extendoMotor)
 
 		Subsystems.front.grabber = Grabber(
 			Subsystems.front.claw,
