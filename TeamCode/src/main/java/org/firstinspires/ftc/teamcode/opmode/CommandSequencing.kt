@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmode
 
 import com.arcrobotics.ftclib.command.CommandScheduler
 import com.arcrobotics.ftclib.command.ParallelCommandGroup
-import com.arcrobotics.ftclib.command.ParallelRaceGroup
 import com.arcrobotics.ftclib.command.button.GamepadButton
 import com.arcrobotics.ftclib.command.button.Trigger
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
@@ -11,24 +10,30 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.core.DepositBar
 import org.firstinspires.ftc.teamcode.command.core.DepositBasket
 import org.firstinspires.ftc.teamcode.command.core.Grab
-import org.firstinspires.ftc.teamcode.command.core.LiftTo
-import org.firstinspires.ftc.teamcode.command.core.LiftToBar
-import org.firstinspires.ftc.teamcode.command.core.LiftToBasket
+import org.firstinspires.ftc.teamcode.command.core.NudgeLift
 import org.firstinspires.ftc.teamcode.command.core.OpenClaw
 import org.firstinspires.ftc.teamcode.command.core.ToIntake
 import org.firstinspires.ftc.teamcode.command.core.Transfer
 import org.firstinspires.ftc.teamcode.command.core.VariableElbow
-import org.firstinspires.ftc.teamcode.command.core.VariableTwist
 import org.firstinspires.ftc.teamcode.command.core.VariableTwist2
 import org.firstinspires.ftc.teamcode.command.core.VariableWrist
 import org.firstinspires.ftc.teamcode.command.core.ZeroTwist
 import org.firstinspires.ftc.teamcode.hardware.Robot
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
+import org.firstinspires.ftc.teamcode.hardware.subsystems.Extendo
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Lift
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 
 @TeleOp
 class CommandSequencing : BasedOpMode() {
+    val lift by lazy {
+        Robot.Subsystems.back.extendable as Lift
+    }
+
+    val extendo by lazy {
+        Robot.Subsystems.front.extendable as Extendo
+    }
+
     override fun initialize() {
         val front = Robot.Subsystems.front
         val back = Robot.Subsystems.back
@@ -47,8 +52,11 @@ class CommandSequencing : BasedOpMode() {
         GamepadButton(gamepad, CROSS).whenPressed(ToIntake())
         GamepadButton(gamepad, CIRCLE).whenPressed(Grab())
         GamepadButton(gamepad, TRIANGLE).whenPressed(Transfer())
-        GamepadButton(gamepad, SQUARE).whenPressed(LiftToBasket(Robot.Subsystems.back.extendable as Lift))
-        GamepadButton(gamepad, GamepadKeys.Button.RIGHT_BUMPER).whenPressed(LiftToBar(Robot.Subsystems.back.extendable as Lift))
+        GamepadButton(gamepad, SQUARE).whenPressed(DepositBasket(lift))
+        GamepadButton(gamepad, GamepadKeys.Button.DPAD_UP).whenPressed(DepositBar(lift))
+
+        GamepadButton(Robot.gamepad1, GamepadKeys.Button.LEFT_BUMPER).whenPressed(NudgeLift(-2, lift))
+        GamepadButton(Robot.gamepad1, GamepadKeys.Button.RIGHT_BUMPER).whenPressed(NudgeLift(2, lift))
 
         Trigger { TriggerReader(Robot.gamepad1, GamepadKeys.Trigger.RIGHT_TRIGGER).isDown }
             .whileActiveContinuous(VariableTwist2(0.03, 10))

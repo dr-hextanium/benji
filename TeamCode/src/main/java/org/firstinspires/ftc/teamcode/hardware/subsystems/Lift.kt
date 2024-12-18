@@ -6,17 +6,19 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.teamcode.hardware.devices.CachingDcMotor
+import kotlin.math.abs
 import kotlin.math.sign
 
 class Lift(val pinkLift: DcMotorEx, val blackLift: CachingDcMotor, val encoder: DcMotorEx) : IExtendable {
 	override var target = 0
 	override var position = 0
 
-	var state = State.ZERO
-		set(value) {
-			target = state.target
-			field = value
-		}
+	val state
+		get() = State
+			.entries
+			.map { it to abs(target - it.target) }
+			.minBy { it.second }
+			.first
 
 //		get() = asInches(encoder.currentPosition).toInt()
 

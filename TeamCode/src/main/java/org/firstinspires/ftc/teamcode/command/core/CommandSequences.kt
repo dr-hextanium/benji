@@ -81,33 +81,75 @@ class Transfer: SequentialCommandGroup(
     ParallelCommandGroup(
         VariableWrist(Wrist.BACK_DEFAULT, Robot.Subsystems.back.grabber.wrist),
         VariableElbow(Elbow.BACK_TO_DEPOSIT, Robot.Subsystems.back.grabber.elbow)
-    )
+    ),
+
+    WaitCommand(500),
+    CloseClaw(Robot.Subsystems.front.grabber)
 )
+
+//class DepositBasket(lift: Lift): ConditionalCommand(
+//    SequentialCommandGroup(
+//        LiftTo(Lift.State.HIGH_BASKET, lift, 100),
+//        VariableWrist(Wrist.BACK_TO_DEPOSIT, Robot.Subsystems.back.wrist)
+//    ),
+//    SequentialCommandGroup(
+//        LiftTo(Lift.State.ZERO, lift),
+//        VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
+//        VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
+//        OpenClaw(Robot.Subsystems.back.grabber)
+//    ),
+//    { Robot.Subsystems.back.extendable.position == Lift.ZERO }
+//)
+//
+//class DepositBar(lift: Lift): ConditionalCommand(
+//    SequentialCommandGroup(
+//        LiftTo(Lift.State.HIGH_BAR, lift, 100),
+//        VariableWrist(Wrist.BACK_TO_DEPOSIT, Robot.Subsystems.back.wrist)
+//    ),
+//    SequentialCommandGroup(
+//        LiftTo(Lift.State.ZERO, lift),
+//        VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
+//        VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
+//        OpenClaw(Robot.Subsystems.back.grabber)
+//    ),
+//    { Robot.Subsystems.back.extendable.position == Lift.ZERO }
+//)
 
 class DepositBasket(lift: Lift): ConditionalCommand(
     SequentialCommandGroup(
         LiftTo(Lift.State.HIGH_BASKET, lift, 100),
-        VariableWrist(Wrist.BACK_TO_DEPOSIT, Robot.Subsystems.back.wrist)
+        ParallelCommandGroup(
+            VariableWrist(Wrist.BACK_TO_DEPOSIT, Robot.Subsystems.back.wrist),
+            VariableElbow(Elbow.BACK_TO_DEPOSIT, Robot.Subsystems.back.elbow)
+        )
     ),
     SequentialCommandGroup(
-        LiftTo(Lift.State.ZERO, lift),
-        VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
-        VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
-        OpenClaw(Robot.Subsystems.back.grabber)
+        ParallelCommandGroup(
+            VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.wrist),
+            VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.elbow)
+        ),
+        WaitCommand(100),
+        LiftTo(Lift.State.ZERO, lift)
     ),
-    { Robot.Subsystems.back.extendable.position == Lift.ZERO }
+    { lift.state == Lift.State.ZERO }
 )
 
 class DepositBar(lift: Lift): ConditionalCommand(
     SequentialCommandGroup(
         LiftTo(Lift.State.HIGH_BAR, lift, 100),
-        VariableWrist(Wrist.BACK_TO_DEPOSIT, Robot.Subsystems.back.wrist)
+        ParallelCommandGroup(
+            VariableWrist(Wrist.BACK_TO_DEPOSIT, Robot.Subsystems.back.wrist),
+            VariableElbow(Elbow.BACK_TO_DEPOSIT, Robot.Subsystems.back.elbow)
+        )
     ),
     SequentialCommandGroup(
-        LiftTo(Lift.State.ZERO, lift),
-        VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
-        VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
-        OpenClaw(Robot.Subsystems.back.grabber)
+        OpenClaw(Robot.Subsystems.back.grabber),
+        ParallelCommandGroup(
+            VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.wrist),
+            VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.elbow)
+        ),
+        WaitCommand(100),
+        LiftTo(Lift.State.ZERO, lift)
     ),
-    { Robot.Subsystems.back.extendable.position == Lift.ZERO }
+    { lift.state == Lift.State.ZERO }
 )

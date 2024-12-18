@@ -32,8 +32,9 @@ class LiftTest : BasedOpMode() {
 //            telemetry.addLine("pressed a")
 //        }
 //
-//        telemetry.addLine("target: ${lift.target}")
-//        telemetry.addLine("pos: ${lift.position}")
+        telemetry.addLine("state: ${lift.state}")
+        telemetry.addLine("pos: ${lift.position}")
+        telemetry.addLine("target: ${lift.target}")
 //        telemetry.addLine("blac: ${lift.blackLift.getCurrent(CurrentUnit.AMPS)}")
 //        telemetry.addLine("pinc: ${lift.pinkLift.getCurrent(CurrentUnit.AMPS)}")
 //        telemetry.addLine("blac overcurrent: ${lift.blackLift.isOverCurrent}")
