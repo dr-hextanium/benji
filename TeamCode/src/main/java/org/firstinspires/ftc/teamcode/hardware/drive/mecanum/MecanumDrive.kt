@@ -35,7 +35,13 @@ class MecanumDrive : IDrive, ISubsystem {
 			Motors.bl to red,
 			Motors.fl to blue,
 			Motors.br to blue,
-		).let { (it.values.max()).let { max -> it.mapValues { (_, value) -> value / max } } }
+		)
+			.let {
+				(it.values.max())
+					.let {
+						max -> it.mapValues { (_, value) -> value / max }
+					}
+			}
 	}
 
 	override fun update() {

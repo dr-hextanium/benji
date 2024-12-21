@@ -11,7 +11,7 @@ import kotlin.math.sign
 
 class Lift(val pinkLift: DcMotorEx, val blackLift: CachingDcMotor, val encoder: DcMotorEx) : IExtendable {
 	override var target = 0
-	override var position = 0
+	override var position = 0.0
 
 	val state
 		get() = State
@@ -20,19 +20,17 @@ class Lift(val pinkLift: DcMotorEx, val blackLift: CachingDcMotor, val encoder: 
 			.minBy { it.second }
 			.first
 
-//		get() = asInches(encoder.currentPosition).toInt()
-
 	private val controller = PIDController(kP, kI, kD)
 
 	private fun asInches(ticks: Int) = ticks / ticksPerInch
 
 	override fun reset() {
 		encoder.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
-//		encoder.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+		encoder.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
 		blackLift.direction = DcMotorSimple.Direction.REVERSE
-		encoder.direction = DcMotorSimple.Direction.REVERSE
+//		encoder.direction = DcMotorSimple.Direction.REVERSE
 
-		position = 0
+		position = 0.0
 		target = 0
 
 		pinkLift.power = 0.0
@@ -47,7 +45,7 @@ class Lift(val pinkLift: DcMotorEx, val blackLift: CachingDcMotor, val encoder: 
 	override fun read() {  }
 
 	override fun update() {
-		position = asInches(encoder.currentPosition).toInt()
+		position = asInches(encoder.currentPosition)
 	}
 
 	override fun write() {
@@ -64,21 +62,22 @@ class Lift(val pinkLift: DcMotorEx, val blackLift: CachingDcMotor, val encoder: 
 	}
 
 	enum class State(val target: Int) {
-		ZERO(0),
-		HIGH_BASKET(10),
-		HIGH_BAR(5)
+		ZERO(Lift.ZERO),
+		HIGH_BASKET(Lift.HIGH_BASKET),
+		HIGH_BAR(Lift.HIGH_BAR)
 	}
 
 	companion object {
 		const val kP = 0.45
 		const val kI = 0.01
 		const val kD = 0.0
-		const val kS = 0.08
+		const val kS = 0.1
 
 		const val ticksPerInch = 4670.0
 
-		const val HIGH_BASKET = 10 //32
-		const val HIGH_BAR = 5 //20
+		const val HIGH_BASKET = 31 // 32
+		const val HIGH_BAR = 15 // 20
 		const val ZERO = 0
+		const val FORCIBLY_ZERO = -2
 	}
 }

@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.hardware
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.arcrobotics.ftclib.command.CommandScheduler
+import com.arcrobotics.ftclib.drivebase.MecanumDrive
 import com.arcrobotics.ftclib.gamepad.GamepadEx
+import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
@@ -41,6 +43,7 @@ object Robot : ISubsystem {
 	object Subsystems {
 		val front = GrabberSet()
 		val back  = GrabberSet()
+		lateinit var drive: MecanumDrive
 
 		class GrabberSet(val enabled: Boolean = true) {
 			lateinit var grabber: Grabber
@@ -70,9 +73,10 @@ object Robot : ISubsystem {
 		lateinit var extendoMotor: CachingDcMotor
 		lateinit var pinkLift: CachingDcMotor
 		lateinit var blackLift: CachingDcMotor
+		lateinit var liftEncoder: DcMotorEx
 
 		// TODO: Add back extendoMotor when done testing
-		fun all() = listOf(fr, fl, br, bl, extendoMotor, pinkLift, blackLift)
+		fun all() = listOf(fr, fl, br, bl, extendoMotor, pinkLift, blackLift, liftEncoder)
 	}
 
 	object Servos {
@@ -103,14 +107,23 @@ object Robot : ISubsystem {
 		this.gamepad1 = GamepadEx(gamepad1)
 		this.gamepad2 = GamepadEx(gamepad2)
 
-		Motors.fr = CachingDcMotor(hw["frontRight"] as DcMotorEx)
 		Motors.fl = CachingDcMotor(hw["frontLeft"] as DcMotorEx)
 		Motors.br = CachingDcMotor(hw["backRight"] as DcMotorEx)
 		Motors.bl = CachingDcMotor(hw["backLeft"] as DcMotorEx)
+		Motors.fr = CachingDcMotor(hw["frontRight"] as DcMotorEx)
+
+		Subsystems.drive = MecanumDrive(
+			true,
+			Motor(hw, "frontLeft"),
+			Motor(hw, "frontRight"),
+			Motor(hw, "backLeft"),
+			Motor(hw, "backRight")
+		)
 
 		Motors.extendoMotor = CachingDcMotor(hw["extendo"] as DcMotorEx)
 		Motors.pinkLift = CachingDcMotor(hw["pinkLift"] as DcMotorEx)
 		Motors.blackLift = CachingDcMotor(hw["blackLift"] as DcMotorEx)
+		Motors.liftEncoder = hw["liftEncoder"] as DcMotorEx
 
 		Servos.frontClaw = hw["frontClaw"] as ServoImplEx
 		Servos.frontTwist = hw["frontTwist"] as ServoImplEx
@@ -122,7 +135,7 @@ object Robot : ISubsystem {
 		Subsystems.front.wrist = Wrist(Servos.frontWrist, Globals.Bounds.Front.wrist)
 		Subsystems.front.elbow = Elbow(Servos.frontElbow, Globals.Bounds.Front.elbow)
 
-		Subsystems.back.extendable = Lift(Motors.pinkLift, Motors.blackLift, Motors.fr)
+		Subsystems.back.extendable = Lift(Motors.pinkLift, Motors.blackLift, Motors.liftEncoder)
 		Subsystems.front.extendable = Extendo(Motors.extendoMotor)
 
 		Subsystems.front.grabber = Grabber(
@@ -161,6 +174,8 @@ object Robot : ISubsystem {
 	override fun reset() {
 		scheduler.reset()
 		Subsystems.all().forEach { it.reset() }
+
+		Subsystems.drive.stop()
 	}
 
 	override fun read() {

@@ -29,8 +29,8 @@ object Globals {
 
         object Back {
             val twist = Bound(0.137, 0.866)
-            val claw  = Bound(0.000, 1.000)
-            val elbow = Bound(0.535, 0.825)
+            val claw  = Bound(0.100, 1.000)
+            val elbow = Bound(0.535, 0.825)//Bound(0.535, 0.825)
 //            val wrist = Bound(0.146, 1.00)
             val wrist = Bound(0.146, 0.977)
         }

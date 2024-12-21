@@ -47,18 +47,19 @@ public class PIDFTuner extends OpMode {
 
         pinkLift = hardwareMap.get(DcMotorEx.class, "pinkLift");
         blackLift = hardwareMap.get(DcMotorEx.class, "blackLift");
-        liftEncoder = hardwareMap.get(DcMotorEx.class, "frontRight");
+        liftEncoder = hardwareMap.get(DcMotorEx.class, "liftEncoder");
 
         liftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftEncoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         blackLift.setDirection(DcMotorSimple.Direction.REVERSE);
-        liftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+//        liftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
     public void loop() {
         controller.setPID(p, i, d);
 
-        double liftPos = asInches(liftEncoder.getCurrentPosition());
+        int liftPos = (int) asInches(liftEncoder.getCurrentPosition());
         double pid = controller.calculate(liftPos, target);
 
         double power = pid + f * Math.signum(pid);

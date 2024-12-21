@@ -18,6 +18,6 @@ class Twist(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsy
 	override fun update() {  }
 
 	companion object {
-
+		const val MIDDLE = 0.5
 	}
 }

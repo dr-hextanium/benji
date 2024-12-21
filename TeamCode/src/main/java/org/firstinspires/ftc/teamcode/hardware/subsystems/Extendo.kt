@@ -3,17 +3,14 @@ package org.firstinspires.ftc.teamcode.hardware.subsystems
 import com.arcrobotics.ftclib.controller.PIDController
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
-import org.firstinspires.ftc.teamcode.hardware.subsystems.Lift.Companion
-import org.firstinspires.ftc.teamcode.opmode.debug.ExtendoTuner
 import org.firstinspires.ftc.teamcode.opmode.debug.ExtendoTuner.Companion.f
-import org.firstinspires.ftc.teamcode.utility.motion.profile.AsymmetricMotionProfile
-import org.firstinspires.ftc.teamcode.utility.motion.profile.Constraints
 import kotlin.math.sign
 
 class Extendo(val extendo: DcMotorEx) : IExtendable {
-	override var position = 0
+	override var position = 0.0
 	override var target = 0
+
+	val maxPower = 0.8
 
 	private val controller = PIDController(kP, kI, kD)
 
@@ -35,26 +32,26 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 	}
 
 	override fun write() {
-		val pid = controller.calculate(-position.toDouble(), target.toDouble())
+		val pid = controller.calculate(-position, target.toDouble())
 
 		val power = if(controller.atSetPoint()) {
 			0.0
 		} else {
-			pid + f * (target - (-position)).sign
+			(pid + f * (target - (-position)).sign).coerceIn(-maxPower, maxPower)
 		}
 
 		extendo.power = power
 	}
 
 	companion object {
-		const val TO_TRANSFER = -2
+		const val TO_TRANSFER = -5
 		const val TO_INTAKE = 17
 
-		const val kP = 0.15 //0.6
+		const val kP = 0.15 //0.15 more recent //0.6
 		const val kI = 0.1 //0.0
 		const val kD = 0.01 //0.0
 		const val kS = 0
 
-		const val ticksPerInch = 220
+		const val ticksPerInch = 220.0
 	}
 }
