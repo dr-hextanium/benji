@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.command.core.ElbowToDefault
 import org.firstinspires.ftc.teamcode.command.core.ElbowToTransfer
 import org.firstinspires.ftc.teamcode.command.core.VariableElbow
+import org.firstinspires.ftc.teamcode.command.core.VariableTwist
 import org.firstinspires.ftc.teamcode.command.core.VariableWrist
 import org.firstinspires.ftc.teamcode.command.core.WristToTransfer
 import org.firstinspires.ftc.teamcode.hardware.Globals
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.hardware.subsystems.IPositionable
 import org.firstinspires.ftc.teamcode.opmode.BasedOpMode
 import org.firstinspires.ftc.teamcode.hardware.Globals.Bounds.Front
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
+import org.firstinspires.ftc.teamcode.hardware.subsystems.Twist
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 import org.firstinspires.ftc.teamcode.opmode.CommandSequencing.Companion.SQUARE
 
@@ -35,7 +37,9 @@ class ServoPositionFinder : BasedOpMode() {
 
 		CommandScheduler.getInstance().schedule(
 			VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
-			VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow)
+			VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
+			VariableTwist(Twist.MIDDLE, Robot.Subsystems.back.grabber),
+			VariableTwist(Twist.MIDDLE, Robot.Subsystems.front.grabber)
 		)
 		CommandScheduler.getInstance().run()
 	}

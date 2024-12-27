@@ -21,6 +21,7 @@ class ToIntake : SequentialCommandGroup(
         OpenClaw(Robot.Subsystems.front.grabber),
         ExtendoTo(Extendo.TO_INTAKE, Robot.Subsystems.front.extendable as Extendo),
         LiftTo(Lift.ZERO, Robot.Subsystems.back.extendable as Lift),
+        ZeroTwist(Robot.Subsystems.front.grabber)
     ),
 //    WaitCommand(100),
 //    ParallelCommandGroup(
@@ -65,42 +66,82 @@ class ChangeArm : ConditionalCommand(
 //    { Robot.Subsystems.back.grabber.claw.position == Claw.CLOSED }
 //)
 
+//class Transfer: SequentialCommandGroup(
+//    ParallelCommandGroup(
+//        LiftTo(Lift.State.ZERO, Robot.Subsystems.back.extendable as Lift),
+//        VariableWrist(Wrist.BACK_DEFAULT, Robot.Subsystems.back.grabber.wrist),
+//        VariableElbow(Elbow.BACK_TO_DEPOSIT, Robot.Subsystems.back.grabber.elbow),
+//        OpenClaw(Robot.Subsystems.back.grabber),
+//        ZeroTwist(Robot.Subsystems.front.grabber),
+//        ZeroTwist(Robot.Subsystems.back.grabber)
+//    ),
+//
+//    WaitCommand(100),
+//
+//    ParallelCommandGroup(
+//        VariableWrist(Wrist.FRONT_INTERMEDIATE, Robot.Subsystems.front.grabber.wrist),
+//        VariableElbow(Elbow.FRONT_INTERMEDIATE, Robot.Subsystems.front.grabber.elbow),
+//        NudgeLift(-2, Robot.Subsystems.back.extendable as Lift)
+//    ),
+//
+//    WaitCommand(500),
+//    ExtendoTo(Extendo.TO_TRANSFER, Robot.Subsystems.front.extendable as Extendo, 100),
+//
+//    WaitCommand(500),
+//
+//    ParallelCommandGroup(
+//        VariableWrist(Wrist.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.wrist),
+//        VariableElbow(Elbow.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.elbow),
+//    ),
+//
+//    WaitCommand(500),
+//
+//    ParallelCommandGroup(
+//        VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
+//        VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
+//    ),
+//
+//    WaitCommand(500),
+//
+//    CloseClaw(Robot.Subsystems.back.grabber, 300),
+//    OpenClaw(Robot.Subsystems.front.grabber, 100),
+//
+//    ParallelCommandGroup(
+//        NudgeLift(2, Robot.Subsystems.back.extendable as Lift),
+//        ElbowToDefault(Robot.Subsystems.front.grabber),
+//        WristToDefault(Robot.Subsystems.front.grabber),
+//        ExtendoTo(0, Robot.Subsystems.front.extendable as Extendo)
+//    ),
+//
+//    ParallelCommandGroup(
+//        VariableWrist(Wrist.BACK_TO_DEPOSIT, Robot.Subsystems.back.grabber.wrist),
+//        VariableElbow(Elbow.BACK_TO_DEPOSIT, Robot.Subsystems.back.grabber.elbow)
+//    ),
+//
+//    WaitCommand(500),
+//    CloseClaw(Robot.Subsystems.front.grabber)
+//)
+
 class Transfer: SequentialCommandGroup(
     ParallelCommandGroup(
         LiftTo(Lift.State.ZERO, Robot.Subsystems.back.extendable as Lift),
-        VariableWrist(Wrist.BACK_DEFAULT, Robot.Subsystems.back.grabber.wrist),
-        VariableElbow(Elbow.BACK_TO_DEPOSIT, Robot.Subsystems.back.grabber.elbow),
+        VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
+        VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
         OpenClaw(Robot.Subsystems.back.grabber),
-        ZeroTwist(Robot.Subsystems.front.grabber),
-        ZeroTwist(Robot.Subsystems.back.grabber)
+        VariableTwist(Twist.MIDDLE, Robot.Subsystems.front.grabber),
+        VariableTwist(Twist.MIDDLE, Robot.Subsystems.back.grabber)
     ),
 
     WaitCommand(100),
 
     ParallelCommandGroup(
-        VariableWrist(Wrist.FRONT_INTERMEDIATE, Robot.Subsystems.front.grabber.wrist),
-        VariableElbow(Elbow.FRONT_INTERMEDIATE, Robot.Subsystems.front.grabber.elbow),
+        WristToTransfer(Robot.Subsystems.front.grabber),
+        ElbowToTransfer(Robot.Subsystems.front.grabber),
         NudgeLift(-2, Robot.Subsystems.back.extendable as Lift)
     ),
 
-    WaitCommand(500),
-    ExtendoTo(Extendo.TO_TRANSFER, Robot.Subsystems.front.extendable as Extendo, 100),
-
-    WaitCommand(500),
-
-    ParallelCommandGroup(
-        VariableWrist(Wrist.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.wrist),
-        VariableElbow(Elbow.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.elbow),
-    ),
-
-    WaitCommand(500),
-
-    ParallelCommandGroup(
-        VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
-        VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
-    ),
-
-    WaitCommand(500),
+    WaitCommand(300),
+    ExtendoTo(Extendo.TO_TRANSFER, Robot.Subsystems.front.extendable as Extendo, 500),
 
     CloseClaw(Robot.Subsystems.back.grabber, 300),
     OpenClaw(Robot.Subsystems.front.grabber, 100),
@@ -113,12 +154,12 @@ class Transfer: SequentialCommandGroup(
     ),
 
     ParallelCommandGroup(
-        VariableWrist(Wrist.BACK_TO_DEPOSIT, Robot.Subsystems.back.grabber.wrist),
-        VariableElbow(Elbow.BACK_TO_DEPOSIT, Robot.Subsystems.back.grabber.elbow)
+        VariableWrist(Wrist.BACK_DEFAULT, Robot.Subsystems.back.grabber.wrist),
+        VariableElbow(Elbow.BACK_TO_DEPOSIT, Robot.Subsystems.back.grabber.elbow),
+        CloseClaw(Robot.Subsystems.front.grabber)
     ),
 
-    WaitCommand(500),
-    CloseClaw(Robot.Subsystems.front.grabber)
+    WaitCommand(200)
 )
 
 //class DepositBasket(lift: Lift): ConditionalCommand(
