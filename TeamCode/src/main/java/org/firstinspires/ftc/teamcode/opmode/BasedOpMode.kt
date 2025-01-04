@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.command.core.CloseClaw
 import org.firstinspires.ftc.teamcode.command.core.ElbowPointsDown
 import org.firstinspires.ftc.teamcode.command.core.ElbowToTransfer
@@ -22,11 +23,15 @@ import org.firstinspires.ftc.teamcode.utility.geometry.Pose2D
 abstract class BasedOpMode : OpMode() {
 	private val gamepad by lazy { Robot.gamepad1 }
 
+	var timer = ElapsedTime()
+
 	abstract fun initialize()
 
 	override fun init() {
 		Robot.init(hardwareMap, telemetry, gamepad1, gamepad2)
 		initialize()
+		timer.reset()
+
 	}
 
 	abstract fun cycle()
@@ -48,5 +53,7 @@ abstract class BasedOpMode : OpMode() {
 		telemetry.addData("left x", gamepad.leftX)
 		telemetry.addData("left y", gamepad.leftY)
 		telemetry.addData("right y", gamepad.rightY)
+		telemetry.addData("hz", 1000.0 / timer.milliseconds())
+		timer.reset()
 	}
 }

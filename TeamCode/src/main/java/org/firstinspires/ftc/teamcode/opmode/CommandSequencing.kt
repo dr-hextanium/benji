@@ -11,7 +11,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.teamcode.command.core.ChangeArm
 import org.firstinspires.ftc.teamcode.command.core.DepositBar
 import org.firstinspires.ftc.teamcode.command.core.DepositBasket
+import org.firstinspires.ftc.teamcode.command.core.ExtendoTo
 import org.firstinspires.ftc.teamcode.command.core.Grab
+import org.firstinspires.ftc.teamcode.command.core.Intake
 import org.firstinspires.ftc.teamcode.command.core.NudgeLift
 import org.firstinspires.ftc.teamcode.command.core.OpenClaw
 import org.firstinspires.ftc.teamcode.command.core.ToIntake
@@ -53,11 +55,19 @@ class CommandSequencing : BasedOpMode() {
         CommandScheduler.getInstance().run()
 
         GamepadButton(gamepad, SQUARE).whenPressed(ToIntake())
-        GamepadButton(gamepad, TRIANGLE).whenPressed(Grab())
+        GamepadButton(gamepad, TRIANGLE).whenPressed(Intake(extendo))
         GamepadButton(gamepad, CIRCLE).whenPressed(Transfer())
         GamepadButton(gamepad, CROSS).whenPressed(DepositBasket(lift))
         GamepadButton(gamepad, GamepadKeys.Button.DPAD_UP).whenPressed(DepositBar(lift))
-        GamepadButton(gamepad, GamepadKeys.Button.DPAD_RIGHT).whenPressed(ChangeArm())
+        GamepadButton(gamepad, GamepadKeys.Button.DPAD_DOWN).whenPressed(ChangeArm())
+
+//        GamepadButton(gamepad, SQUARE).whenPressed(
+//            ExtendoTo(Extendo.TO_TRANSFER, Robot.Subsystems.front.extendable as Extendo, 500)
+//        )
+//
+//        GamepadButton(gamepad, CIRCLE).whenPressed(
+//            ExtendoTo(Extendo.TO_INTAKE, Robot.Subsystems.front.extendable as Extendo, 500)
+//        )
 
         GamepadButton(Robot.gamepad1, GamepadKeys.Button.LEFT_BUMPER).whenPressed(
             NudgeLift(

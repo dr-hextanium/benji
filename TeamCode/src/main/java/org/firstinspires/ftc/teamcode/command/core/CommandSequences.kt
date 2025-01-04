@@ -21,13 +21,13 @@ class ToIntake : SequentialCommandGroup(
         OpenClaw(Robot.Subsystems.front.grabber),
         ExtendoTo(Extendo.TO_INTAKE, Robot.Subsystems.front.extendable as Extendo),
         LiftTo(Lift.ZERO, Robot.Subsystems.back.extendable as Lift),
-        ZeroTwist(Robot.Subsystems.front.grabber)
+        ZeroTwist(Robot.Subsystems.front.grabber),
     ),
-//    WaitCommand(100),
-//    ParallelCommandGroup(
-//        WristPointsDown(Robot.Subsystems.front.grabber),
-//        ElbowPointsDown(Robot.Subsystems.front.grabber)
-//    )
+    WaitCommand(100),
+    ParallelCommandGroup(
+        VariableWrist(Wrist.FRONT_INTERMEDIATE, Robot.Subsystems.front.wrist),
+        VariableElbow(Elbow.FRONT_INTERMEDIATE, Robot.Subsystems.front.elbow)
+    )
 )
 
 class Grab : ConditionalCommand(
@@ -44,14 +44,34 @@ class Grab : ConditionalCommand(
 
 class ChangeArm : ConditionalCommand(
     ParallelCommandGroup(
-        WristPointsDown(Robot.Subsystems.front.grabber),
-        ElbowPointsDown(Robot.Subsystems.front.grabber)
+        VariableWrist(Wrist.FRONT_INTERMEDIATE, Robot.Subsystems.front.grabber.wrist),
+        VariableElbow(Elbow.FRONT_INTERMEDIATE, Robot.Subsystems.front.grabber.elbow)
     ),
     ParallelCommandGroup(
         WristToDefault(Robot.Subsystems.front.grabber),
         ElbowToDefault(Robot.Subsystems.front.grabber)
     ),
-    { Robot.Subsystems.front.grabber.elbow.position == Elbow.FRONT_DEFAULT }
+    { Robot.Subsystems.front.grabber.elbow.position == Elbow.FRONT_DEFAULT ||
+            Robot.Subsystems.front.grabber.elbow.position == Elbow.FRONT_TO_TRANSFER }
+)
+
+class Intake(extendo: Extendo) : ConditionalCommand(
+    SequentialCommandGroup(
+        OpenClaw(Robot.Subsystems.front.grabber, 100),
+        ParallelCommandGroup(
+            WristPointsDown(Robot.Subsystems.front.grabber),
+            ElbowPointsDown(Robot.Subsystems.front.grabber)
+        ),
+        WaitCommand(500),
+        CloseClaw(Robot.Subsystems.front.grabber),
+        WaitCommand(300),
+        ParallelCommandGroup(
+            WristToTransfer(Robot.Subsystems.front.grabber),
+            ElbowToTransfer(Robot.Subsystems.front.grabber)
+        )
+    ),
+    OpenClaw(Robot.Subsystems.back.grabber),
+    { extendo.state == Extendo.State.INTAKING }
 )
 
 //class GrabFront : ConditionalCommand(

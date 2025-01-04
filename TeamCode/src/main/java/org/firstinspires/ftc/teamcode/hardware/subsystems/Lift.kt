@@ -38,8 +38,6 @@ class Lift(val pinkLift: DcMotorEx, val blackLift: CachingDcMotor, val encoder: 
 
 		pinkLift.setCurrentAlert(3.5, CurrentUnit.AMPS)
 		blackLift.setCurrentAlert(3.5, CurrentUnit.AMPS)
-
-		write()
 	}
 
 	override fun read() {  }
@@ -49,7 +47,7 @@ class Lift(val pinkLift: DcMotorEx, val blackLift: CachingDcMotor, val encoder: 
 	}
 
 	override fun write() {
-		val pid = controller.calculate(position.toDouble(), target.toDouble())
+		val pid = controller.calculate(position, target.toDouble())
 
 		val power = if (controller.atSetPoint()) {
 			0.0

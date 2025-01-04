@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.opmode.BasedOpMode
 import org.firstinspires.ftc.teamcode.opmode.CommandSequencing
 
 @TeleOp
-class ExtendoTest : BasedOpMode() {
+class   ExtendoTest : BasedOpMode() {
     val extendo by lazy { Robot.Subsystems.front.extendable as Extendo }
 
     override fun initialize() {

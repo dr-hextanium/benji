@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.controller.PIDController
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import org.firstinspires.ftc.teamcode.opmode.debug.ExtendoTuner.Companion.f
+import kotlin.math.abs
 import kotlin.math.sign
 
 class Extendo(val extendo: DcMotorEx) : IExtendable {
@@ -11,6 +12,13 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 	override var target = 0
 
 	val maxPower = 0.8
+
+	val state
+		get() = State
+			.entries
+			.map { it to abs(target - it.target) }
+			.minBy { it.second }
+			.first
 
 	private val controller = PIDController(kP, kI, kD)
 
@@ -20,9 +28,6 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 		extendo.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
 		extendo.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
 		extendo.power = 0.0
-
-//		extendo.setCurrentAlert(3.5, CurrentUnit.AMPS)
-//		write()
 	}
 
 	override fun read() {  }
@@ -41,6 +46,11 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 		}
 
 		extendo.power = power
+	}
+
+	enum class State(val target: Int) {
+		TRANSFERING(TO_TRANSFER),
+		INTAKING(TO_INTAKE)
 	}
 
 	companion object {

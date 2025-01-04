@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pedroPathing.util;
+package org.firstinspires.ftc.teamcode.auto.util;
 
 /**
  * This is the Timer class. It is an elapsed time clock with millisecond precision, or at least as
