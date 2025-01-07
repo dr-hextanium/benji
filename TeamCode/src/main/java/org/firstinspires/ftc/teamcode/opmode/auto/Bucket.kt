@@ -21,7 +21,7 @@ class Bucket : AutoOpMode(start) {
             .setLinearHeadingInterpolation(0.0, -PI / 4.0)
             .build()
 
-
+        follower.setMaxPower(1.0)
         follower.followPath(path)
         follower.telemetryDebug(telemetry)
     }
