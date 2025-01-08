@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware
 
+import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.roadrunner.DisplacementProfile
 import com.acmerobotics.roadrunner.forwardProfile
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
@@ -10,7 +11,15 @@ import org.firstinspires.ftc.teamcode.utility.geometry.Vector2D.Extensions.left_
 /**
  * Global configuration for all robot state.
  */
+@Config
 object Globals {
+    @Config
+    object Drive {
+        @JvmField var P = 0.0
+        @JvmField var I = 0.0
+        @JvmField var D = 0.0
+    }
+
     const val SERVO_PROFILE_LOOKAHEAD = 0.005
     const val DRIVE_MOTOR_THRESHOLD = 0.005
 

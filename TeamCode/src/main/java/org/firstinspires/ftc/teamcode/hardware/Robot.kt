@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.hardware.devices.CachingDcMotor
+import org.firstinspires.ftc.teamcode.hardware.drive.mecanum.MecanumDriveSubsystem
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Claw
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Extendo
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.hardware.subsystems.Grabber
 import org.firstinspires.ftc.teamcode.hardware.subsystems.IExtendable
 import org.firstinspires.ftc.teamcode.hardware.subsystems.ISubsystem
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Lift
+import org.firstinspires.ftc.teamcode.hardware.subsystems.OTOSSubsystem
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Twist
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 
@@ -44,6 +46,8 @@ object Robot : ISubsystem {
 		val front = GrabberSet()
 		val back  = GrabberSet()
 		lateinit var drive: MecanumDrive
+		lateinit var autoDrive: MecanumDriveSubsystem
+		lateinit var otos: OTOSSubsystem
 
 		class GrabberSet(val enabled: Boolean = true) {
 			lateinit var grabber: Grabber
@@ -61,7 +65,7 @@ object Robot : ISubsystem {
 
 		fun all(): List<ISubsystem> = listOf(front, back)
 			.filter { it.enabled }
-			.flatMap { it.all() }
+			.flatMap { it.all() } + otos + autoDrive
 	}
 
 	object Motors {
@@ -165,6 +169,9 @@ object Robot : ISubsystem {
 		Subsystems.front.wrist.servo.direction = Servo.Direction.REVERSE
 		Subsystems.back.wrist.servo.direction = Servo.Direction.REVERSE
 		Subsystems.back.claw.servo.direction = Servo.Direction.REVERSE
+
+		Subsystems.otos = OTOSSubsystem(hw)
+		Subsystems.autoDrive = MecanumDriveSubsystem(Motors.fr, Motors.fl, Motors.br, Motors.bl, Subsystems.otos)
 
 		scheduler.registerSubsystem(*Subsystems.all().toTypedArray())
 
