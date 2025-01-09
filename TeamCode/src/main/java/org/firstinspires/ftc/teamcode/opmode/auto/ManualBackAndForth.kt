@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode.opmode.auto
 
+import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.CommandScheduler
 import com.arcrobotics.ftclib.command.button.GamepadButton
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
+import com.arcrobotics.ftclib.geometry.Pose2d
+import com.arcrobotics.ftclib.geometry.Rotation2d
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
-import org.firstinspires.ftc.teamcode.command.auto.SquIDDriveCommand
+import org.firstinspires.ftc.teamcode.command.auto.GoToPointCommand
 import org.firstinspires.ftc.teamcode.command.core.OpenClaw
 import org.firstinspires.ftc.teamcode.command.core.VariableElbow
 import org.firstinspires.ftc.teamcode.command.core.VariableWrist
@@ -18,7 +21,7 @@ import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 import org.firstinspires.ftc.teamcode.opmode.BasedOpMode
 
 @Autonomous
-class ManualBackAndForth : BasedOpMode() {
+class ManualBackAndForth : AutoOpMode() {
     override fun initialize() {
         val front = Robot.Subsystems.front
         val back = Robot.Subsystems.back
@@ -26,18 +29,20 @@ class ManualBackAndForth : BasedOpMode() {
 
         GamepadButton(gamepad, GamepadKeys.Button.DPAD_UP)
             .whenPressed(
-                SquIDDriveCommand(Robot.Subsystems.otos, Robot.Subsystems.autoDrive, 0.0, 0.0 ,0.0)
-                    .setTarget(Pose2D(DistanceUnit.INCH, 0.0, 0.0, AngleUnit.DEGREES, 0.0))
-                    .setLinearTolerance(0.25)
-                    .setAngularTolerance(1.0)
+                GoToPointCommand(
+                    Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0)),
+                    Robot.Subsystems.drive,
+                    Robot.Subsystems.otos
+                )
             )
 
-        GamepadButton(gamepad, GamepadKeys.Button.DPAD_DOWN)
+        GamepadButton(gamepad, GamepadKeys.Button.DPAD_UP)
             .whenPressed(
-                SquIDDriveCommand(Robot.Subsystems.otos, Robot.Subsystems.autoDrive, 0.0, 0.0 ,0.0)
-                    .setTarget(Pose2D(DistanceUnit.INCH, 50.0, 0.0, AngleUnit.DEGREES, 0.0))
-                    .setLinearTolerance(0.25)
-                    .setAngularTolerance(1.0)
+                GoToPointCommand(
+                    Pose2d(0.0, 25.0, Rotation2d.fromDegrees(0.0)),
+                    Robot.Subsystems.drive,
+                    Robot.Subsystems.otos
+                )
             )
 
         CommandScheduler.getInstance().schedule(
@@ -51,7 +56,14 @@ class ManualBackAndForth : BasedOpMode() {
     }
 
     override fun cycle() {
-        telemetry.addData("total current", Robot.Motors.all().sumOf { it.getCurrent(CurrentUnit.AMPS) })
-        telemetry.addData("pose", Robot.Subsystems.otos.getPose())
+        val pose = Robot.Subsystems.otos.getPose()
+
+        val x = pose.x
+        val y = pose.y
+        val heading = pose.heading
+
+        telemetry.addData("x", x)
+        telemetry.addData("y", y)
+        telemetry.addData("heading", heading)
     }
 }

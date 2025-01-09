@@ -4,12 +4,13 @@ import com.arcrobotics.ftclib.controller.PIDController
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.teamcode.hardware.devices.CachingDcMotor
 import kotlin.math.abs
 import kotlin.math.sign
 
-class Lift(val pinkLift: DcMotorEx, val blackLift: CachingDcMotor, val encoder: DcMotorEx) : IExtendable {
+class Lift(val pinkLift: DcMotorEx, val blackLift: DcMotorEx, val encoder: DcMotorEx) : IExtendable {
 	override var target = 0
 	override var position = 0.0
 

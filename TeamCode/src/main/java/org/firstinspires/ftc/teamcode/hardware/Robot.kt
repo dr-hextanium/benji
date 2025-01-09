@@ -6,13 +6,18 @@ import com.arcrobotics.ftclib.command.CommandScheduler
 import com.arcrobotics.ftclib.drivebase.MecanumDrive
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.hardware.motors.Motor
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
+import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx
+import dev.frozenmilk.dairy.cachinghardware.CachingServo
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.hardware.devices.CachingDcMotor
+import org.firstinspires.ftc.teamcode.hardware.devices.SparkFunOTOSCorrected
+import org.firstinspires.ftc.teamcode.hardware.drive.mecanum.CachingMecanumDrive
 import org.firstinspires.ftc.teamcode.hardware.drive.mecanum.MecanumDriveSubsystem
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Claw
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
@@ -36,6 +41,8 @@ object Robot : ISubsystem {
 	val scheduler: CommandScheduler
 		get() = CommandScheduler.getInstance()
 
+	lateinit var hubs: List<LynxModule>
+
 	lateinit var telemetry: MultipleTelemetry
 	lateinit var hw: HardwareMap
 
@@ -45,8 +52,8 @@ object Robot : ISubsystem {
 	object Subsystems {
 		val front = GrabberSet()
 		val back  = GrabberSet()
-		lateinit var drive: MecanumDrive
-		lateinit var autoDrive: MecanumDriveSubsystem
+
+		lateinit var drive: CachingMecanumDrive
 		lateinit var otos: OTOSSubsystem
 
 		class GrabberSet(val enabled: Boolean = true) {
@@ -65,18 +72,18 @@ object Robot : ISubsystem {
 
 		fun all(): List<ISubsystem> = listOf(front, back)
 			.filter { it.enabled }
-			.flatMap { it.all() } + otos + autoDrive
+			.flatMap { it.all() } + otos
 	}
 
 	object Motors {
-		lateinit var fr: CachingDcMotor
-		lateinit var fl: CachingDcMotor
-		lateinit var br: CachingDcMotor
-		lateinit var bl: CachingDcMotor
+		lateinit var fr: CachingDcMotorEx
+		lateinit var fl: CachingDcMotorEx
+		lateinit var br: CachingDcMotorEx
+		lateinit var bl: CachingDcMotorEx
 
-		lateinit var extendoMotor: CachingDcMotor
-		lateinit var pinkLift: CachingDcMotor
-		lateinit var blackLift: CachingDcMotor
+		lateinit var extendoMotor: CachingDcMotorEx
+		lateinit var pinkLift: CachingDcMotorEx
+		lateinit var blackLift: CachingDcMotorEx
 		lateinit var liftEncoder: DcMotorEx
 
 		// TODO: Add back extendoMotor when done testing
@@ -84,17 +91,17 @@ object Robot : ISubsystem {
 	}
 
 	object Servos {
-		lateinit var frontClaw: ServoImplEx
-		lateinit var backClaw: ServoImplEx
+		lateinit var frontClaw: CachingServo
+		lateinit var backClaw: CachingServo
 
-		lateinit var frontTwist: ServoImplEx
-		lateinit var backTwist: ServoImplEx
+		lateinit var frontTwist: CachingServo
+		lateinit var backTwist: CachingServo
 
-		lateinit var frontWrist: ServoImplEx
-		lateinit var backWrist: ServoImplEx
+		lateinit var frontWrist: CachingServo
+		lateinit var backWrist: CachingServo
 
-		lateinit var frontElbow: ServoImplEx
-		lateinit var backElbow: ServoImplEx
+		lateinit var frontElbow: CachingServo
+		lateinit var backElbow: CachingServo
 
 		fun all() = listOf(
 			frontClaw, backClaw,
@@ -108,31 +115,37 @@ object Robot : ISubsystem {
 		this.telemetry = MultipleTelemetry(FtcDashboard.getInstance().telemetry, telemetry)
 		this.hw = hw
 
+		this.hubs = hw.getAll(LynxModule::class.java)
+
+		this.hubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
+
 		this.gamepad1 = GamepadEx(gamepad1)
 		this.gamepad2 = GamepadEx(gamepad2)
 
-		Motors.fl = CachingDcMotor(hw["frontLeft"] as DcMotorEx)
-		Motors.br = CachingDcMotor(hw["backRight"] as DcMotorEx)
-		Motors.bl = CachingDcMotor(hw["backLeft"] as DcMotorEx)
-		Motors.fr = CachingDcMotor(hw["frontRight"] as DcMotorEx)
+		Motors.fl = CachingDcMotorEx(hw["frontLeft"] as DcMotorEx, 0.0)
+		Motors.br = CachingDcMotorEx(hw["backRight"] as DcMotorEx, 0.0)
+		Motors.bl = CachingDcMotorEx(hw["backLeft"] as DcMotorEx, 0.0)
+		Motors.fr = CachingDcMotorEx(hw["frontRight"] as DcMotorEx, 0.0)
 
-		Subsystems.drive = MecanumDrive(
+		Subsystems.otos = OTOSSubsystem(hw["otos"] as SparkFunOTOSCorrected)
+
+		Subsystems.drive = CachingMecanumDrive(
 			true,
-			Motor(hw, "frontLeft"),
-			Motor(hw, "frontRight"),
-			Motor(hw, "backLeft"),
-			Motor(hw, "backRight")
+			Motors.fl,
+			Motors.fr,
+			Motors.bl,
+			Motors.br
 		)
 
-		Motors.extendoMotor = CachingDcMotor(hw["extendo"] as DcMotorEx)
-		Motors.pinkLift = CachingDcMotor(hw["pinkLift"] as DcMotorEx)
-		Motors.blackLift = CachingDcMotor(hw["blackLift"] as DcMotorEx)
+		Motors.extendoMotor = CachingDcMotorEx(hw["extendo"] as DcMotorEx)
+		Motors.pinkLift = CachingDcMotorEx(hw["pinkLift"] as DcMotorEx)
+		Motors.blackLift = CachingDcMotorEx(hw["blackLift"] as DcMotorEx)
 		Motors.liftEncoder = hw["liftEncoder"] as DcMotorEx
 
-		Servos.frontClaw = hw["frontClaw"] as ServoImplEx
-		Servos.frontTwist = hw["frontTwist"] as ServoImplEx
-        Servos.frontWrist = hw["frontWrist"] as ServoImplEx
-        Servos.frontElbow = hw["frontElbow"] as ServoImplEx
+		Servos.frontClaw = CachingServo(hw["frontClaw"] as Servo)
+		Servos.frontTwist = CachingServo(hw["frontTwist"] as Servo)
+        Servos.frontWrist = CachingServo(hw["frontWrist"] as Servo)
+        Servos.frontElbow = CachingServo(hw["frontElbow"] as Servo)
 
 		Subsystems.front.claw = Claw(Servos.frontClaw, Globals.Bounds.Front.claw)
 		Subsystems.front.twist = Twist(Servos.frontTwist, Globals.Bounds.Front.twist)
@@ -149,10 +162,10 @@ object Robot : ISubsystem {
 			Subsystems.front.elbow
 		)
 
-		Servos.backClaw = hw["backClaw"] as ServoImplEx
-		Servos.backTwist = hw["backTwist"] as ServoImplEx
-		Servos.backWrist = hw["backWrist"] as ServoImplEx
-		Servos.backElbow = hw["backElbow"] as ServoImplEx
+		Servos.backClaw = CachingServo(hw["backClaw"] as Servo)
+		Servos.backTwist = CachingServo(hw["backTwist"] as Servo)
+		Servos.backWrist = CachingServo(hw["backWrist"] as Servo)
+		Servos.backElbow = CachingServo(hw["backElbow"] as Servo)
 
 		Subsystems.back.claw = Claw(Servos.backClaw, Globals.Bounds.Back.claw)
 		Subsystems.back.twist = Twist(Servos.backTwist, Globals.Bounds.Back.twist)
@@ -169,9 +182,6 @@ object Robot : ISubsystem {
 		Subsystems.front.wrist.servo.direction = Servo.Direction.REVERSE
 		Subsystems.back.wrist.servo.direction = Servo.Direction.REVERSE
 		Subsystems.back.claw.servo.direction = Servo.Direction.REVERSE
-
-		Subsystems.otos = OTOSSubsystem(hw)
-		Subsystems.autoDrive = MecanumDriveSubsystem(Motors.fr, Motors.fl, Motors.br, Motors.bl, Subsystems.otos)
 
 		scheduler.registerSubsystem(*Subsystems.all().toTypedArray())
 
@@ -190,8 +200,8 @@ object Robot : ISubsystem {
 	}
 
 	override fun update() {
-		Subsystems.all().forEach { it.update() }
 		scheduler.run()
+		Subsystems.all().forEach { it.update() }
 	}
 
 	override fun write() {

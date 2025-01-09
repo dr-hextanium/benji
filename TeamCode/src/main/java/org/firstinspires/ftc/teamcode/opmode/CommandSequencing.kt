@@ -30,13 +30,8 @@ import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 
 @TeleOp
 class CommandSequencing : BasedOpMode() {
-    val lift by lazy {
-        Robot.Subsystems.back.extendable as Lift
-    }
-
-    val extendo by lazy {
-        Robot.Subsystems.front.extendable as Extendo
-    }
+    val extendo by lazy { Robot.Subsystems.front.extendable as Extendo  }
+    val lift by lazy { Robot.Subsystems.back.extendable as Lift }
 
     override fun initialize() {
         val front = Robot.Subsystems.front
@@ -109,7 +104,7 @@ class CommandSequencing : BasedOpMode() {
     }
 
     override fun cycle() {
-        telemetry.addData("total current", Robot.Motors.all().sumOf { it.getCurrent(CurrentUnit.AMPS) })
+//        telemetry.addData("total current", Robot.Motors.all().sumOf { it.getCurrent(CurrentUnit.AMPS) })
     }
 
     companion object {

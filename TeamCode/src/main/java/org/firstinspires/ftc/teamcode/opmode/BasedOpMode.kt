@@ -28,20 +28,24 @@ abstract class BasedOpMode : OpMode() {
 	abstract fun initialize()
 
 	override fun init() {
+		Globals.AUTO = false
+
 		Robot.init(hardwareMap, telemetry, gamepad1, gamepad2)
 		initialize()
 		timer.reset()
-
 	}
 
 	abstract fun cycle()
 
 	override fun loop() {
+		Robot.hubs.forEach { it.clearBulkCache() }
+
 		Robot.read()
 		Robot.update()
-		Robot.scheduler.run()
+
 		cycle()
-		Robot.write()
+
+		Robot.scheduler.run()
 
 		Subsystems.drive.driveRobotCentric(
 			-Robot.gamepad1.leftX,
@@ -50,10 +54,13 @@ abstract class BasedOpMode : OpMode() {
 					if (front.extendable.target != 0) (7.0 / 17.0) else 1.0
 		)
 
+		Robot.write()
+
 		telemetry.addData("left x", gamepad.leftX)
 		telemetry.addData("left y", gamepad.leftY)
 		telemetry.addData("right y", gamepad.rightY)
 		telemetry.addData("hz", 1000.0 / timer.milliseconds())
+
 		timer.reset()
 	}
 }

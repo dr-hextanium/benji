@@ -23,7 +23,7 @@ class Wrist(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsy
 		const val FRONT_DOWN = 0.0 // 0.0
 		const val FRONT_INTERMEDIATE = 0.051
 
-		const val BACK_TO_TRANSFER = 0.088 //0.034 //0.0
+		const val BACK_TO_TRANSFER = 0.12 //0.034 //0.0
 		const val BACK_TO_DEPOSIT = 1.0
 		const val BACK_DEFAULT = 0.578
 	}

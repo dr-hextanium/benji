@@ -13,12 +13,7 @@ import org.firstinspires.ftc.teamcode.utility.geometry.Vector2D.Extensions.left_
  */
 @Config
 object Globals {
-    @Config
-    object Drive {
-        @JvmField var P = 0.0
-        @JvmField var I = 0.0
-        @JvmField var D = 0.0
-    }
+    var AUTO = false
 
     const val SERVO_PROFILE_LOOKAHEAD = 0.005
     const val DRIVE_MOTOR_THRESHOLD = 0.005

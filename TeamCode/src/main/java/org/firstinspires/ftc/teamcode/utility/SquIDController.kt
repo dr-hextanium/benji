@@ -1,19 +1,26 @@
-package org.firstinspires.ftc.teamcode.utility;
+package org.firstinspires.ftc.teamcode.utility
 
-public class SquIDController {
-    double p, i, d;
+import com.arcrobotics.ftclib.controller.PIDFController
+import kotlin.math.abs
+import kotlin.math.sign
+import kotlin.math.sqrt
 
-    public SquIDController() {
-        p = 0;
-        i = 0;
-        d = 0;
-    }
+class SquIDController(
+    kP: Double,
+    kI: Double,
+    kD: Double,
+    kF: Double
+) : PIDFController(kP, kI, kD, kF) {
+    constructor(coefficients: DoubleArray) : this(
+        coefficients[0],
+        coefficients[1],
+        coefficients[2],
+        coefficients[3]
+    )
 
-    public void setPID(double p) {
-        this.p = p;
-    }
+    override fun calculate(pv: Double, error: Double): Double {
+        val raw = super.calculate(pv, error)
 
-    public double calculate(double setpoint, double current) {
-        return Math.sqrt(Math.abs((setpoint - current) * p)) * Math.signum(setpoint - current);
+        return sqrt(abs(raw)) * raw.sign
     }
 }

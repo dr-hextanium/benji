@@ -11,14 +11,14 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 	override var position = 0.0
 	override var target = 0
 
-	val maxPower = 0.8
-
 	val state
 		get() = State
 			.entries
 			.map { it to abs(target - it.target) }
 			.minBy { it.second }
 			.first
+
+	var power = 0.0
 
 	private val controller = PIDController(kP, kI, kD)
 
@@ -30,21 +30,21 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 		extendo.power = 0.0
 	}
 
-	override fun read() {  }
-
-	override fun update() {
+	override fun read() {
 		position = asInches(extendo.currentPosition)
 	}
 
-	override fun write() {
-		val pid = controller.calculate(-position, target.toDouble())
-
-		val power = if(controller.atSetPoint()) {
+	override fun update() {
+		power = if (controller.atSetPoint()) {
 			0.0
 		} else {
-			(pid + f * (target - (-position)).sign).coerceIn(-maxPower, maxPower)
-		}
+			val pid = controller.calculate(-position, target.toDouble())
 
+			(pid + f * (target - (-position)).sign).coerceIn(-MAX_POWER, MAX_POWER)
+		}
+	}
+
+	override fun write() {
 		extendo.power = power
 	}
 
@@ -63,5 +63,7 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 		const val kS = 0
 
 		const val ticksPerInch = 220.0
+
+		const val MAX_POWER = 0.8
 	}
 }

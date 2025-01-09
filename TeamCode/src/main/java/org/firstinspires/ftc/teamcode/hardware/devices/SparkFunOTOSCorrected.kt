@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware
+package org.firstinspires.ftc.teamcode.hardware.devices
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch
