@@ -18,8 +18,15 @@ class SquIDController(
         coefficients[3]
     )
 
-    override fun calculate(pv: Double, error: Double): Double {
-        val raw = super.calculate(pv, error)
+    fun setPIDF(coefficients: DoubleArray) {
+        this.p = coefficients[0]
+        this.i = coefficients[1]
+        this.d = coefficients[2]
+        this.f = coefficients[3]
+    }
+
+    override fun calculate(target: Double, given: Double): Double {
+        val raw = super.calculate(target, given)
 
         return sqrt(abs(raw)) * raw.sign
     }

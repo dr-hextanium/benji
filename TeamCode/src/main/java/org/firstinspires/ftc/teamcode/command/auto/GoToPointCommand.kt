@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.command.auto
 
+import android.view.View.X
 import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.CommandBase
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.command.auto.GoToPointCommand.GoToConfig.M
 import org.firstinspires.ftc.teamcode.command.auto.GoToPointCommand.GoToConfig.MAX_POWER
 import org.firstinspires.ftc.teamcode.command.auto.GoToPointCommand.GoToConfig.MAX_LINEAR_ERROR
 import org.firstinspires.ftc.teamcode.command.auto.GoToPointCommand.GoToConfig.RUNTIME
+import org.firstinspires.ftc.teamcode.hardware.Robot
 import org.firstinspires.ftc.teamcode.hardware.drive.Localizer
 import org.firstinspires.ftc.teamcode.hardware.drive.mecanum.CachingMecanumDrive
 import org.firstinspires.ftc.teamcode.utility.SquIDController
@@ -36,6 +38,10 @@ class GoToPointCommand(
     }
 
     override fun execute() {
+        xController.setPIDF(X_PID)
+        yController.setPIDF(Y_PID)
+        hController.setPIDF(H_PID)
+
         val pose = localizer.getPose()
 
         val headingError = (target.heading - pose.heading).let {
@@ -50,9 +56,26 @@ class GoToPointCommand(
         val y = yController.calculate(pose.y, target.y).coerceIn(-MAX_POWER, MAX_POWER)
         val h = hController.calculate(pose.heading, pose.heading + headingError).coerceIn(-MAX_HEADING, MAX_HEADING)
 
-        println("PID X: $x, Y: $y, H: $h")
+        val ex = xController.positionError
+        val ey = yController.positionError
+        val eh = hController.positionError
 
-        drive.driveFieldCentric(-x, -y, -h, pose.heading)
+
+        println("t: ${timer.time(TimeUnit.SECONDS)}")
+        println("POS x: ${pose.x}, y: ${pose.y}, h: ${pose.heading}")
+        println("TAR x: ${target.x}, y: ${target.y}, h: ${target.heading}")
+        println("ERR x: $ex, y: $ey, h: $eh")
+        println("PID x: $x, y: $y, h: $h")
+        println("VAL X: ${X_PID[0]}, Y: ${Y_PID[0]}, H: ${H_PID[0]}")
+
+        val corrective = 12.7 / Robot.voltage
+
+        drive.driveFieldCentric(
+            -x * corrective,
+            -y * corrective,
+            -h * corrective,
+            pose.heading
+        )
     }
 
     override fun isFinished(): Boolean {

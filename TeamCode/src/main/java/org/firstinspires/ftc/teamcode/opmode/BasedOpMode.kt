@@ -1,24 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmode
 
-import com.arcrobotics.ftclib.command.button.GamepadButton
-import com.arcrobotics.ftclib.gamepad.GamepadEx
-import com.arcrobotics.ftclib.gamepad.GamepadKeys.*
-import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import com.qualcomm.robotcore.hardware.DcMotor
-import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.teamcode.command.core.CloseClaw
-import org.firstinspires.ftc.teamcode.command.core.ElbowPointsDown
-import org.firstinspires.ftc.teamcode.command.core.ElbowToTransfer
-import org.firstinspires.ftc.teamcode.command.core.WristPointsDown
-import org.firstinspires.ftc.teamcode.command.core.WristToTransfer
 import org.firstinspires.ftc.teamcode.hardware.Globals
 import org.firstinspires.ftc.teamcode.hardware.Robot
 import org.firstinspires.ftc.teamcode.hardware.Robot.Subsystems
 import org.firstinspires.ftc.teamcode.hardware.Robot.Subsystems.front
-import org.firstinspires.ftc.teamcode.hardware.drive.mecanum.MecanumDrive
-import org.firstinspires.ftc.teamcode.utility.geometry.Pose2D
 
 abstract class BasedOpMode : OpMode() {
 	private val gamepad by lazy { Robot.gamepad1 }
@@ -47,12 +34,14 @@ abstract class BasedOpMode : OpMode() {
 
 		Robot.scheduler.run()
 
-		Subsystems.drive.driveRobotCentric(
-			-Robot.gamepad1.leftX,
-			-Robot.gamepad1.leftY,
-			-Robot.gamepad1.rightX *
-					if (front.extendable.target != 0) (7.0 / 17.0) else 1.0
-		)
+		if (!Globals.AUTO) {
+			Subsystems.drive.driveRobotCentric(
+				-Robot.gamepad1.leftX,
+				-Robot.gamepad1.leftY,
+				-Robot.gamepad1.rightX *
+						if (front.extendable.target != 0) (7.0 / 17.0) else 1.0
+			)
+		}
 
 		Robot.write()
 

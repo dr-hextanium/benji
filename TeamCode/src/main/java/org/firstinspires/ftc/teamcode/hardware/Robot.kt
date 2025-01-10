@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
+import com.qualcomm.robotcore.hardware.VoltageSensor
+import com.qualcomm.robotcore.util.ElapsedTime
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx
 import dev.frozenmilk.dairy.cachinghardware.CachingServo
 import org.firstinspires.ftc.robotcore.external.Telemetry
@@ -48,6 +50,10 @@ object Robot : ISubsystem {
 
 	lateinit var gamepad1: GamepadEx
 	lateinit var gamepad2: GamepadEx
+
+	lateinit var voltageSensor: Iterator<VoltageSensor>
+	var voltageTimer = ElapsedTime()
+	var voltage: Double = 0.0
 
 	object Subsystems {
 		val front = GrabberSet()
@@ -118,6 +124,9 @@ object Robot : ISubsystem {
 		this.hubs = hw.getAll(LynxModule::class.java)
 
 		this.hubs.forEach { it.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL }
+
+		this.voltageSensor = hw.voltageSensor.iterator()
+		this.voltageTimer.reset()
 
 		this.gamepad1 = GamepadEx(gamepad1)
 		this.gamepad2 = GamepadEx(gamepad2)
@@ -196,6 +205,10 @@ object Robot : ISubsystem {
 	}
 
 	override fun read() {
+		if (voltageTimer.milliseconds() > 500.0 && voltageSensor.hasNext()) {
+			voltage = voltageSensor.next().voltage
+		}
+
 		Subsystems.all().forEach { it.read() }
 	}
 
