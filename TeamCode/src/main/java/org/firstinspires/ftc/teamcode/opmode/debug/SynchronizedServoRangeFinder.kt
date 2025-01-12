@@ -11,8 +11,8 @@ class SynchronizedServoRangeFinder : BasedOpMode() {
 	val a: IPositionable by lazy { Robot.Subsystems.front.wrist }
 	val b: IPositionable by lazy { Robot.Subsystems.front.elbow }
 
-	val ap = Globals.Profiles.Front.wrist
-	val bp = Globals.Profiles.Front.elbow
+//	val ap = Globals.Profiles.Front.wrist
+//	val bp = Globals.Profiles.Front.elbow
 
 	override fun initialize() {}
 

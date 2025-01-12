@@ -20,7 +20,7 @@ class Elbow(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsy
 	companion object {
 		const val FRONT_TO_TRANSFER = 0.950 //0.914 //0.958 //1.0
 		const val FRONT_DOWN = 0.0 //0.05
-		const val FRONT_INTERMEDIATE = 0.205
+		const val FRONT_INTERMEDIATE = 0.414 //0.205
 		const val FRONT_DEFAULT = 0.850 //0.850
 
 		const val BACK_TO_TRANSFER = 0.029

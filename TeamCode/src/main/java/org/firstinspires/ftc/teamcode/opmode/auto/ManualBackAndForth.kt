@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.button.GamepadButton
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.geometry.Pose2d
 import com.arcrobotics.ftclib.geometry.Rotation2d
+import com.pedropathing.localization.Pose
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
@@ -21,7 +22,9 @@ import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 import org.firstinspires.ftc.teamcode.opmode.BasedOpMode
 
 @Autonomous
-class ManualBackAndForth : AutoOpMode() {
+class ManualBackAndForth : AutoOpMode(Pose(0.0, 0.0, 0.0)) {
+    override fun paths() {}
+
     override fun initialize() {
         val front = Robot.Subsystems.front
         val back = Robot.Subsystems.back

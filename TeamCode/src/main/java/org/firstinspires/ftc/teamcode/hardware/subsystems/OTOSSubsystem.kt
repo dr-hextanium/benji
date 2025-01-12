@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.subsystems
 
+import com.acmerobotics.roadrunner.ftc.SparkFunOTOSCorrected
 import com.acmerobotics.dashboard.canvas.Canvas
 import com.arcrobotics.ftclib.geometry.Pose2d
 import com.arcrobotics.ftclib.geometry.Rotation2d
@@ -7,7 +8,7 @@ import com.arcrobotics.ftclib.geometry.Vector2d
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
-import org.firstinspires.ftc.teamcode.hardware.devices.SparkFunOTOSCorrected
+//import org.firstinspires.ftc.teamcode.hardware.devices.SparkFunOTOSCorrected
 import org.firstinspires.ftc.teamcode.hardware.drive.Localizer
 
 class OTOSSubsystem(val sensor: SparkFunOTOSCorrected) : Localizer, ISubsystem {
