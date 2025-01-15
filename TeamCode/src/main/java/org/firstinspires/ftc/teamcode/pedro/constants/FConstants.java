@@ -39,8 +39,8 @@ public class FConstants {
         FollowerConstants.headingPIDFFeedForward = 0.01;
         FollowerConstants.useSecondaryHeadingPID = true;
         FollowerConstants.headingPIDFSwitch = 0.15707963267948966;
-        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(0.01, 0, 0.0, 0); // Not being used, @see useSecondaryHeadingPID
-        FollowerConstants.secondaryHeadingPIDFFeedForward = 0.005;
+        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(0.02, 0, 0.0, 0); // Not being used, @see useSecondaryHeadingPID
+        FollowerConstants.secondaryHeadingPIDFFeedForward = 0.012;
 
         FollowerConstants.drivePIDFCoefficients.setCoefficients(0.01, 0, 0, 0.6, 0);
         FollowerConstants.drivePIDFFeedForward = 0.01;

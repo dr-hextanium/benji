@@ -88,7 +88,6 @@ object Robot : ISubsystem {
 		lateinit var blackLift: CachingDcMotorEx
 		lateinit var liftEncoder: DcMotorEx
 
-		// TODO: Add back extendoMotor when done testing
 		fun all() = listOf(fr, fl, br, bl, extendoMotor, pinkLift, blackLift, liftEncoder)
 	}
 

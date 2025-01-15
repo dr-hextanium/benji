@@ -20,7 +20,7 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 
 	var power = 0.0
 
-	private val controller = PIDController(kP, kI, kD)
+	val controller = PIDController(kP, kI, kD)
 
 	private fun asInches(ticks: Int) = ticks / ticksPerInch
 
@@ -35,7 +35,7 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 	}
 
 	override fun update() {
-		power = if (controller.atSetPoint()) {
+		power = if (abs(target - position) <= TOLERANCE) {
 			0.0
 		} else {
 			val pid = controller.calculate(-position, target.toDouble())
@@ -65,5 +65,7 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 		const val ticksPerInch = 220.0
 
 		const val MAX_POWER = 0.8
+
+		const val TOLERANCE = 0.5
 	}
 }
