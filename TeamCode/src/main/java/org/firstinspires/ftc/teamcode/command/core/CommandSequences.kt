@@ -23,7 +23,9 @@ class ToIntake : SequentialCommandGroup(
         LiftTo(Lift.ZERO, Robot.Subsystems.back.extendable as Lift),
         ZeroTwist(Robot.Subsystems.front.grabber),
     ),
-    WaitCommand(100),
+
+    WaitCommand(400),
+
     ParallelCommandGroup(
         VariableWrist(Wrist.FRONT_INTERMEDIATE, Robot.Subsystems.front.wrist),
         VariableElbow(Elbow.FRONT_INTERMEDIATE, Robot.Subsystems.front.elbow)
@@ -142,7 +144,7 @@ class Intake(extendo: Extendo) : ConditionalCommand(
 //    CloseClaw(Robot.Subsystems.front.grabber)
 //)
 
-class Transfer: SequentialCommandGroup(
+class Transfer : SequentialCommandGroup(
     ParallelCommandGroup(
         LiftTo(Lift.State.ZERO, Robot.Subsystems.back.extendable as Lift),
         VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),

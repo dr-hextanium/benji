@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.Robot.Subsystems
 import org.firstinspires.ftc.teamcode.hardware.Robot.Subsystems.back
 import org.firstinspires.ftc.teamcode.hardware.Robot.Subsystems.front
 import org.firstinspires.ftc.teamcode.opmode.CommandSequencing.Companion.SQUARE
+import kotlin.math.pow
 
 abstract class BasedOpMode : OpMode() {
 	private val gamepad by lazy { Robot.gamepad1 }
@@ -71,10 +72,10 @@ abstract class BasedOpMode : OpMode() {
 
 		if (!Globals.AUTO) {
 			Subsystems.drive.driveRobotCentric(
-				-Robot.gamepad1.leftX,
-				-Robot.gamepad1.leftY,
-				-Robot.gamepad1.rightX *
-						if (front.extendable.target != 0) (7.0 / 17.0) else 1.0
+				-Robot.gamepad1.leftX.pow(3),
+				-Robot.gamepad1.leftY.pow(3),
+				-Robot.gamepad1.rightX
+						* if (front.extendable.target != 0) 0.75 else 1.0,
 			)
 		}
 

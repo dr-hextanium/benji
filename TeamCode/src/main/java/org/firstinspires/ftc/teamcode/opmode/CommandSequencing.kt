@@ -104,7 +104,7 @@ class CommandSequencing : BasedOpMode() {
     }
 
     override fun cycle() {
-//        telemetry.addData("total current", Robot.Motors.all().sumOf { it.getCurrent(CurrentUnit.AMPS) })
+        telemetry.addData("total current", Robot.Motors.all().sumOf { it.getCurrent(CurrentUnit.AMPS) })
     }
 
     companion object {

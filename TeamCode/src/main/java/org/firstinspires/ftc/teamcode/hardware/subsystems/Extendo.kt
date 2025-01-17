@@ -57,15 +57,14 @@ class Extendo(val extendo: DcMotorEx) : IExtendable {
 		const val TO_TRANSFER = -5
 		const val TO_INTAKE = 17
 
-		const val kP = 0.15 //0.15 more recent //0.6
-		const val kI = 0.1 //0.0
-		const val kD = 0.01 //0.0
+		const val kP = 0.07 //0.15 more recent //0.6
+		const val kI = 0.0 //0.0
+		const val kD = 0.0 //0.0
 		const val kS = 0
 
 		const val ticksPerInch = 220.0
 
 		const val MAX_POWER = 0.8
-
 		const val TOLERANCE = 0.5
 	}
 }
