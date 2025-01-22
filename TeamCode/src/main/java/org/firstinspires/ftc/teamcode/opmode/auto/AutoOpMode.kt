@@ -27,7 +27,9 @@ abstract class AutoOpMode(val start: Pose) : BasedOpMode() {
         paths()
     }
 
-    override fun start() { runtime.reset() }
+    override fun start() {
+        runtime.reset()
+    }
 
     abstract fun paths()
 

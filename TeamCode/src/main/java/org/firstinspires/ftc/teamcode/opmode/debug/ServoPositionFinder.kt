@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode.debug
 
 import com.arcrobotics.ftclib.command.CommandScheduler
+import com.arcrobotics.ftclib.command.ConditionalCommand
 import com.arcrobotics.ftclib.command.button.GamepadButton
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.command.core.CloseClaw
 import org.firstinspires.ftc.teamcode.command.core.ElbowToDefault
 import org.firstinspires.ftc.teamcode.command.core.ElbowToTransfer
+import org.firstinspires.ftc.teamcode.command.core.OpenClaw
 import org.firstinspires.ftc.teamcode.command.core.VariableElbow
 import org.firstinspires.ftc.teamcode.command.core.VariableTwist
 import org.firstinspires.ftc.teamcode.command.core.VariableWrist
@@ -15,6 +18,7 @@ import org.firstinspires.ftc.teamcode.hardware.Robot
 import org.firstinspires.ftc.teamcode.hardware.subsystems.IPositionable
 import org.firstinspires.ftc.teamcode.opmode.BasedOpMode
 import org.firstinspires.ftc.teamcode.hardware.Globals.Bounds.Front
+import org.firstinspires.ftc.teamcode.hardware.subsystems.Claw
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Twist
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
@@ -42,6 +46,22 @@ class ServoPositionFinder : BasedOpMode() {
 			VariableTwist(Twist.MIDDLE, Robot.Subsystems.front.grabber)
 		)
 		CommandScheduler.getInstance().run()
+
+		GamepadButton(Robot.gamepad1, GamepadKeys.Button.DPAD_LEFT).whenPressed(
+			ConditionalCommand(
+				OpenClaw(Robot.Subsystems.front.grabber),
+				CloseClaw(Robot.Subsystems.front.grabber)
+			)
+			{ Robot.Subsystems.front.grabber.claw.position == Claw.CLOSED }
+		)
+
+		GamepadButton(Robot.gamepad1, GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+			ConditionalCommand(
+				OpenClaw(Robot.Subsystems.front.grabber),
+				CloseClaw(Robot.Subsystems.front.grabber)
+			)
+			{ Robot.Subsystems.front.grabber.claw.position == Claw.CLOSED }
+		)
 	}
 
 	override fun cycle() {

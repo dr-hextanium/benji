@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys
 import com.arcrobotics.ftclib.gamepad.TriggerReader
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
+import org.firstinspires.ftc.teamcode.command.auto.DepositToBar
 import org.firstinspires.ftc.teamcode.command.core.ChangeArm
 import org.firstinspires.ftc.teamcode.command.core.DepositBar
 import org.firstinspires.ftc.teamcode.command.core.DepositBasket
@@ -36,7 +37,8 @@ class CommandSequencing : BasedOpMode() {
     override fun initialize() {
         val front = Robot.Subsystems.front
         val back = Robot.Subsystems.back
-        val gamepad = Robot.gamepad1
+        val gamepad1 = Robot.gamepad1
+        val gamepad2 = Robot.gamepad2
 
         CommandScheduler.getInstance().schedule(
             OpenClaw(back.grabber),
@@ -49,20 +51,14 @@ class CommandSequencing : BasedOpMode() {
 
         CommandScheduler.getInstance().run()
 
-        GamepadButton(gamepad, SQUARE).whenPressed(ToIntake())
-        GamepadButton(gamepad, TRIANGLE).whenPressed(Intake(extendo))
-        GamepadButton(gamepad, CIRCLE).whenPressed(Transfer())
-        GamepadButton(gamepad, CROSS).whenPressed(DepositBasket(lift))
-        GamepadButton(gamepad, GamepadKeys.Button.DPAD_UP).whenPressed(DepositBar(lift))
-        GamepadButton(gamepad, GamepadKeys.Button.DPAD_DOWN).whenPressed(ChangeArm())
 
-//        GamepadButton(gamepad, SQUARE).whenPressed(
-//            ExtendoTo(Extendo.TO_TRANSFER, Robot.Subsystems.front.extendable as Extendo, 500)
-//        )
-//
-//        GamepadButton(gamepad, CIRCLE).whenPressed(
-//            ExtendoTo(Extendo.TO_INTAKE, Robot.Subsystems.front.extendable as Extendo, 500)
-//        )
+        //SAMPLES: GAMEPAD 1
+        GamepadButton(gamepad1, SQUARE).whenPressed(ToIntake())
+        GamepadButton(gamepad1, TRIANGLE).whenPressed(Intake(extendo))
+        GamepadButton(gamepad1, CIRCLE).whenPressed(Transfer())
+        GamepadButton(gamepad1, CROSS).whenPressed(DepositBasket(lift))
+        GamepadButton(gamepad1, GamepadKeys.Button.DPAD_DOWN).whenPressed(ChangeArm())
+        GamepadButton(gamepad1, GamepadKeys.Button.DPAD_UP).whenPressed(Grab())
 
         GamepadButton(Robot.gamepad1, GamepadKeys.Button.LEFT_BUMPER).whenPressed(
             NudgeLift(
@@ -77,12 +73,6 @@ class CommandSequencing : BasedOpMode() {
             )
         )
 
-//        Trigger { TriggerReader(Robot.gamepad1, GamepadKeys.Trigger.RIGHT_TRIGGER).isDown }
-//            .whileActiveContinuous(VariableTwist2(0.03, 10))
-//
-//        Trigger { TriggerReader(Robot.gamepad1, GamepadKeys.Trigger.LEFT_TRIGGER).isDown }
-//            .whileActiveContinuous(VariableTwist2(-0.03,10))
-
         Trigger { TriggerReader(Robot.gamepad1, GamepadKeys.Trigger.RIGHT_TRIGGER).isDown }
             .whileActiveContinuous(NudgeTwist(0.16, 500))
 
@@ -94,6 +84,62 @@ class CommandSequencing : BasedOpMode() {
                 Robot.gamepad1,
                 GamepadKeys.Trigger.LEFT_TRIGGER
             ).isDown && TriggerReader(Robot.gamepad1, GamepadKeys.Trigger.RIGHT_TRIGGER).isDown
+        }
+            .whenActive(
+                ParallelCommandGroup(
+                    ZeroTwist(Robot.Subsystems.front.grabber),
+                    ZeroTwist(Robot.Subsystems.back.grabber)
+                )
+            )
+
+
+        //SPECIMENS: GAMEPAD 2
+        GamepadButton(gamepad2, SQUARE).whenPressed(ToIntake())
+        GamepadButton(gamepad2, TRIANGLE).whenPressed(Intake(extendo))
+        GamepadButton(gamepad2, CIRCLE).whenPressed(Transfer())
+        GamepadButton(gamepad2, CROSS).whenPressed(DepositToBar())
+        GamepadButton(gamepad2, GamepadKeys.Button.DPAD_DOWN).whenPressed(ChangeArm())
+        GamepadButton(gamepad2, GamepadKeys.Button.DPAD_UP).whenPressed(Grab())
+        GamepadButton(gamepad2, GamepadKeys.Button.DPAD_LEFT).whenPressed(ExtendoTo(0, extendo))
+
+//        GamepadButton(gamepad, SQUARE).whenPressed(
+//            ExtendoTo(Extendo.TO_TRANSFER, Robot.Subsystems.front.extendable as Extendo, 500)
+//        )
+//
+//        GamepadButton(gamepad, CIRCLE).whenPressed(
+//            ExtendoTo(Extendo.TO_INTAKE, Robot.Subsystems.front.extendable as Extendo, 500)
+//        )
+
+        GamepadButton(Robot.gamepad2, GamepadKeys.Button.LEFT_BUMPER).whenPressed(
+            NudgeLift(
+                -2,
+                lift
+            )
+        )
+        GamepadButton(Robot.gamepad2, GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
+            NudgeLift(
+                2,
+                lift
+            )
+        )
+
+//        Trigger { TriggerReader(Robot.gamepad1, GamepadKeys.Trigger.RIGHT_TRIGGER).isDown }
+//            .whileActiveContinuous(VariableTwist2(0.03, 10))
+//
+//        Trigger { TriggerReader(Robot.gamepad1, GamepadKeys.Trigger.LEFT_TRIGGER).isDown }
+//            .whileActiveContinuous(VariableTwist2(-0.03,10))
+
+        Trigger { TriggerReader(Robot.gamepad2, GamepadKeys.Trigger.RIGHT_TRIGGER).isDown }
+            .whileActiveContinuous(NudgeTwist(0.16, 500))
+
+        Trigger { TriggerReader(Robot.gamepad2, GamepadKeys.Trigger.LEFT_TRIGGER).isDown }
+            .whileActiveContinuous(NudgeTwist(-0.16, 500))
+
+        Trigger {
+            TriggerReader(
+                Robot.gamepad2,
+                GamepadKeys.Trigger.LEFT_TRIGGER
+            ).isDown && TriggerReader(Robot.gamepad2, GamepadKeys.Trigger.RIGHT_TRIGGER).isDown
         }
             .whenActive(
                 ParallelCommandGroup(

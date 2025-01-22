@@ -35,11 +35,11 @@ public class FConstants {
         FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.4, 0.0, 0.01, 0.0); // Not being used, @see useSecondaryTranslationalPID
         FollowerConstants.secondaryTranslationalPIDFFeedForward = 0.015;
 
-        FollowerConstants.headingPIDFCoefficients.setCoefficients(2.1, 0, 0.0, 0);
+        FollowerConstants.headingPIDFCoefficients.setCoefficients(2.2, 0, 0.0, 0);
         FollowerConstants.headingPIDFFeedForward = 0.01;
         FollowerConstants.useSecondaryHeadingPID = true;
         FollowerConstants.headingPIDFSwitch = 0.15707963267948966;
-        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(0.4, 0, 0.0, 0); // Not being used, @see useSecondaryHeadingPID
+        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(0.6, 0, 0.0, 0); // Not being used, @see useSecondaryHeadingPID
         FollowerConstants.secondaryHeadingPIDFFeedForward = 0.013;
 
         FollowerConstants.drivePIDFCoefficients.setCoefficients(0.01, 0, 0, 0.6, 0);

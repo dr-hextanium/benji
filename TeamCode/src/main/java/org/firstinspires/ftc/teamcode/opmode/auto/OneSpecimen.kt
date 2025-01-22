@@ -8,15 +8,19 @@ import com.arcrobotics.ftclib.command.ParallelDeadlineGroup
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import com.arcrobotics.ftclib.command.WaitCommand
 import com.pedropathing.localization.Pose
+import com.pedropathing.pathgen.BezierCurve
 import com.pedropathing.pathgen.BezierLine
 import com.pedropathing.pathgen.Point
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.teamcode.command.auto.DepositToBar
 import org.firstinspires.ftc.teamcode.command.auto.DepositToBasket
 import org.firstinspires.ftc.teamcode.command.auto.DepositToGround
 import org.firstinspires.ftc.teamcode.command.auto.PedroPathCommand
 import org.firstinspires.ftc.teamcode.command.core.CloseClaw
 import org.firstinspires.ftc.teamcode.command.core.ElbowPointsDown
+import org.firstinspires.ftc.teamcode.command.core.ExtendoTo
 import org.firstinspires.ftc.teamcode.command.core.Intake
+import org.firstinspires.ftc.teamcode.command.core.NudgeLift
 import org.firstinspires.ftc.teamcode.command.core.OpenClaw
 import org.firstinspires.ftc.teamcode.command.core.Transfer
 import org.firstinspires.ftc.teamcode.command.core.VariableElbow
@@ -28,17 +32,17 @@ import org.firstinspires.ftc.teamcode.hardware.Robot.Subsystems.front
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Extendo
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Extendo.Companion.TO_INTAKE
+import org.firstinspires.ftc.teamcode.hardware.subsystems.Lift
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 import kotlin.math.PI
 
 @Autonomous
-class TwoSample : AutoOpMode(Pose(8.65, 109.5, 0.0)) {
+class OneSpecimen : AutoOpMode(Pose(8.5, 86.5, PI / 2.0)) {
     val commands = mutableListOf<Command>()
 
     override fun paths() {
-        val scoreSite = Pose(15.75, 123.0, -PI / 4.0)
-
-        val firstSample = Pose(17.5, 116.5, Math.toRadians(0.0))
+        val scoreSite = Pose(39.0, 72.0, PI)
+        val endPoint = Pose(19.75, 121.0, 0.0)
 
         val preload = follower.pathBuilder()
             .addPath(BezierLine(Point(start), Point(scoreSite)))
@@ -46,17 +50,10 @@ class TwoSample : AutoOpMode(Pose(8.65, 109.5, 0.0)) {
             .setZeroPowerAccelerationMultiplier(0.5)
             .build()
 
-        val first = follower.pathBuilder()
-            .addPath(BezierLine(Point(scoreSite), Point(firstSample)))
-            .setLinearHeadingInterpolation(scoreSite.heading, firstSample.heading)
+        val end = follower.pathBuilder()
+            .addPath(BezierLine(Point(scoreSite), Point(endPoint)))
+            .setLinearHeadingInterpolation(PI, 0.0)
             .setZeroPowerAccelerationMultiplier(0.5)
-            .build()
-
-        val second = follower.pathBuilder()
-            .addPath(BezierLine(Point(firstSample), Point(scoreSite)))
-            .setLinearHeadingInterpolation(firstSample.heading, scoreSite.heading)
-            .setZeroPowerAccelerationMultiplier(1.00)
-            .setPathEndHeadingConstraint(0.001)
             .build()
 
         val extendo by lazy { front.extendable as Extendo }
@@ -67,65 +64,27 @@ class TwoSample : AutoOpMode(Pose(8.65, 109.5, 0.0)) {
                     PedroPathCommand(preload, follower, timer),
                     SequentialCommandGroup(
                         WaitCommand(1500),
-                        DepositToBasket(),
+                        DepositToBar(),
                     )
                 ),
 
-                WaitCommand(1000),
-                VariableWrist(Wrist.BACK_TO_DEPOSIT, back.wrist),
-                VariableElbow(Elbow.BACK_TO_DEPOSIT, back.elbow),
-
-                WaitCommand(500),
-                OpenClaw(back.grabber),
-
-                WaitCommand(750),
-                VariableWrist(Wrist.BACK_DEFAULT, back.wrist),
-                VariableElbow(Elbow.BACK_TO_TRANSFER, back.elbow),
-
-                WaitCommand(1000),
-                DepositToGround(),
-
-                WaitCommand(500),
-                PedroPathCommand(first, follower, timer),
-
                 WaitCommand(1500),
-                InstantCommand({ extendo.target = TO_INTAKE }),
+                NudgeLift(10, back.extendable as Lift, 1000),
+                OpenClaw(back.grabber, 500),
 
-                WaitCommand(1500),
-                ParallelCommandGroup(
-                    WristPointsDown(front.grabber),
-                    ElbowPointsDown(front.grabber),
-                ),
-
-                WaitCommand(1000),
-                CloseClaw(front.grabber),
-
-                WaitCommand(1000),
-                Transfer(),
-
-                WaitCommand(1000),
-
-                ParallelCommandGroup(
-                    PedroPathCommand(second, follower, timer),
-                    SequentialCommandGroup(
-                        WaitCommand(1500),
-                        DepositToBasket(),
-                    )
-                ),
-
-                WaitCommand(1000),
-                VariableWrist(Wrist.BACK_TO_DEPOSIT, back.wrist),
-                VariableElbow(Elbow.BACK_TO_DEPOSIT, back.elbow),
-
-                WaitCommand(500),
-                OpenClaw(back.grabber),
-
-                WaitCommand(750),
-                VariableWrist(Wrist.BACK_DEFAULT, back.wrist),
-                VariableElbow(Elbow.BACK_TO_TRANSFER, back.elbow),
-
-                WaitCommand(1000),
                 DepositToGround(),
+                WaitCommand(1000),
+//
+                PedroPathCommand(end, follower, timer),
+//                WaitCommand(5000),
+//
+//                ParallelCommandGroup(
+//                    ExtendoTo(TO_INTAKE, extendo),
+//                    VariableWrist(Wrist.FRONT_INTERMEDIATE, front.grabber.wrist),
+//                    VariableElbow(Elbow.FRONT_INTERMEDIATE, front.grabber.elbow)
+//                ),
+//                WaitCommand(1000),
+//                Intake(extendo)
             )
         )
     }

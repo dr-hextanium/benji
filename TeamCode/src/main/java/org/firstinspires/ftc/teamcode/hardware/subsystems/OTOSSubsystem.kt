@@ -26,6 +26,8 @@ class OTOSSubsystem(val sensor: SparkFunOTOSCorrected) : Localizer, ISubsystem {
         )
     }
 
+    fun getDegrees() = pose.h
+
     fun setPosition(x: Double, y: Double) {
         sensor.position = SparkFunOTOS.Pose2D(x, y, pose.h)
     }
