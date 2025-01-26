@@ -15,6 +15,6 @@ import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 class DepositToBasket : SequentialCommandGroup(
     LiftTo(Lift.State.HIGH_BASKET, Robot.Subsystems.back.extendable as Lift, 100),
     ParallelCommandGroup(
-        VariableTwist(Twist.MIDDLE, Robot.Subsystems.back.grabber)
+        VariableTwist(Twist.BACK_TRANSFER, Robot.Subsystems.back.grabber)
     )
 )

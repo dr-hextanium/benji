@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.opmode
 
 import com.arcrobotics.ftclib.command.CommandScheduler
 import com.arcrobotics.ftclib.command.ParallelCommandGroup
+import com.arcrobotics.ftclib.command.SequentialCommandGroup
+import com.arcrobotics.ftclib.command.WaitCommand
+import com.arcrobotics.ftclib.command.WaitUntilCommand
 import com.arcrobotics.ftclib.command.button.GamepadButton
 import com.arcrobotics.ftclib.command.button.Trigger
 import com.arcrobotics.ftclib.gamepad.GamepadKeys
@@ -35,22 +38,8 @@ class CommandSequencing : BasedOpMode() {
     val lift by lazy { Robot.Subsystems.back.extendable as Lift }
 
     override fun initialize() {
-        val front = Robot.Subsystems.front
-        val back = Robot.Subsystems.back
         val gamepad1 = Robot.gamepad1
         val gamepad2 = Robot.gamepad2
-
-        CommandScheduler.getInstance().schedule(
-            OpenClaw(back.grabber),
-            OpenClaw(front.grabber),
-            VariableWrist(Wrist.BACK_DEFAULT, back.grabber.wrist),
-            VariableElbow(Elbow.BACK_TO_DEPOSIT, back.grabber.elbow),
-            VariableWrist(Wrist.FRONT_DEFAULT, front.grabber.wrist),
-            VariableElbow(Elbow.FRONT_DEFAULT, front.grabber.elbow)
-        )
-
-        CommandScheduler.getInstance().run()
-
 
         //SAMPLES: GAMEPAD 1
         GamepadButton(gamepad1, SQUARE).whenPressed(ToIntake())
@@ -147,6 +136,25 @@ class CommandSequencing : BasedOpMode() {
                     ZeroTwist(Robot.Subsystems.back.grabber)
                 )
             )
+    }
+
+    override fun start() {
+        val front = Robot.Subsystems.front
+        val back = Robot.Subsystems.back
+
+        CommandScheduler.getInstance().schedule(
+            OpenClaw(back.grabber),
+            OpenClaw(front.grabber),
+            VariableWrist(Wrist.FRONT_DEFAULT, front.grabber.wrist),
+            VariableElbow(Elbow.FRONT_DEFAULT, front.grabber.elbow),
+            SequentialCommandGroup(
+                VariableElbow(Elbow.BACK_TO_DEPOSIT, back.grabber.elbow),
+                WaitCommand(1500),
+                VariableWrist(Wrist.BACK_DEFAULT, back.grabber.wrist),
+            )
+        )
+
+        CommandScheduler.getInstance().run()
     }
 
     override fun cycle() {

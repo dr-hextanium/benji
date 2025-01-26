@@ -14,13 +14,14 @@ import org.firstinspires.ftc.teamcode.utility.geometry.Vector2D.Extensions.left_
 @Config
 object Globals {
     var AUTO = false
+    var ALLIANCE = Alliance.Red
 
     const val SERVO_PROFILE_LOOKAHEAD = 0.005
     const val DRIVE_MOTOR_THRESHOLD = 0.005
 
     object Bounds {
         object Front {
-            val twist = Bound(0.330, 0.890)
+            val twist = Bound(0.363, 0.922)
 //            val claw  = Bound(0.027, 0.479)
             val claw = Bound(0.230, 0.479)
 //            val elbow = Bound(0.000, 0.800)
@@ -70,4 +71,9 @@ object Globals {
 
         return Pose2D(velocity, omega)
     }
+}
+
+enum class Alliance {
+    Red,
+    Blue
 }

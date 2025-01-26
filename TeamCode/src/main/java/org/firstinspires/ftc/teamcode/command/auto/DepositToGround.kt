@@ -17,6 +17,6 @@ class DepositToGround : SequentialCommandGroup(
     ParallelCommandGroup(
         VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.wrist),
         VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.elbow),
-        VariableTwist(Twist.MIDDLE, Robot.Subsystems.back.grabber)
+        VariableTwist(Twist.BACK_TRANSFER, Robot.Subsystems.back.grabber)
     )
 )

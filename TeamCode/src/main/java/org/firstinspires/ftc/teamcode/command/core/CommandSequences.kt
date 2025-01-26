@@ -150,8 +150,8 @@ class Transfer : SequentialCommandGroup(
         VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
         VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
         OpenClaw(Robot.Subsystems.back.grabber),
-        VariableTwist(Twist.MIDDLE, Robot.Subsystems.front.grabber),
-        VariableTwist(Twist.MIDDLE, Robot.Subsystems.back.grabber)
+        VariableTwist(Twist.FRONT_TRANSFER, Robot.Subsystems.front.grabber),
+        VariableTwist(Twist.BACK_TRANSFER, Robot.Subsystems.back.grabber)
     ),
 
     WaitCommand(100),
@@ -218,7 +218,7 @@ class DepositBasket(lift: Lift): ConditionalCommand(
         ParallelCommandGroup(
             VariableWrist(Wrist.BACK_TO_DEPOSIT, Robot.Subsystems.back.wrist),
             VariableElbow(Elbow.BACK_TO_DEPOSIT, Robot.Subsystems.back.elbow),
-            VariableTwist(Twist.MIDDLE, Robot.Subsystems.back.grabber)
+            VariableTwist(Twist.BACK_TRANSFER, Robot.Subsystems.back.grabber)
         )
     ),
     SequentialCommandGroup(
