@@ -51,8 +51,8 @@ class IntermediatePositionFinder : BasedOpMode() {
         CommandScheduler.getInstance().schedule(
             VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
             VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
-            VariableTwist(Twist.MIDDLE, Robot.Subsystems.back.grabber),
-            VariableTwist(Twist.MIDDLE, Robot.Subsystems.front.grabber)
+            VariableTwist(Twist.BACK_TRANSFER, Robot.Subsystems.back.grabber),
+            VariableTwist(Twist.FRONT_INTAKE, Robot.Subsystems.front.grabber)
         )
         CommandScheduler.getInstance().run()
 

@@ -5,18 +5,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.hardware.Servo
 import org.firstinspires.ftc.teamcode.hardware.Robot
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Claw
+import org.firstinspires.ftc.teamcode.opmode.BasedOpMode
 
 @TeleOp
-class ServoDebugger : OpMode() {
-	private val claw  = Robot.Subsystems.back.claw
-	private val twist = Robot.Subsystems.back.twist
-	private val wrist = Robot.Subsystems.back.wrist
-	private val elbow = Robot.Subsystems.back.elbow
+class ServoDebugger : BasedOpMode() {
+	private val wrist by lazy { Robot.Subsystems.front.twist }
 
-	override fun init() {
+	override fun initialize() {
+
 	}
 
-	override fun loop() {
+	override fun cycle() {
 		if(gamepad1.cross) {
 			wrist.position = 1.0
 			telemetry.addData("position", wrist.position)

@@ -8,7 +8,6 @@ class Wrist(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsy
 
 	override fun reset() {
 		bound(bound)
-		write()
 	}
 
 	override fun read() {}

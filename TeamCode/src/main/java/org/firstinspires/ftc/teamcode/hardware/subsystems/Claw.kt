@@ -8,7 +8,6 @@ class Claw(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsys
 
 	override fun reset() {
 		bound(bound)
-		write()
 	}
 
 	override fun read() { }

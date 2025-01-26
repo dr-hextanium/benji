@@ -63,13 +63,13 @@ abstract class BasedOpMode : OpMode() {
 		Robot.hubs.forEach { it.clearBulkCache() }
 
 		Robot.read()
-		Robot.update()
+//		Robot.update()
 
 		cycle()
 
 		Robot.scheduler.run()
 
-		Robot.write()
+//		Robot.write()
 
 		telemetry.addData("left x", gamepad.leftX)
 		telemetry.addData("left y", gamepad.leftY)
@@ -134,6 +134,9 @@ abstract class BasedOpMode : OpMode() {
 		telemetry.addData("extendo pos", front.extendable.position)
 		telemetry.addData("extendo target", front.extendable.target)
 		telemetry.addData("extendo power", (front.extendable as Extendo).power)
+
+		telemetry.addData("color", Subsystems.camera.color.name)
+		telemetry.addData("angle", Subsystems.camera.pixelPos)
 
 		timer.reset()
 	}

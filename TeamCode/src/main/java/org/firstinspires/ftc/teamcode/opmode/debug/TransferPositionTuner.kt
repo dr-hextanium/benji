@@ -44,8 +44,8 @@ class TransferPositionTuner : BasedOpMode() {
         backWrist.bound(Globals.Bounds.Back.wrist)
 
         ParallelCommandGroup(
-            VariableTwist(Twist.MIDDLE, Robot.Subsystems.front.grabber),
-            VariableTwist(Twist.MIDDLE, Robot.Subsystems.back.grabber)
+            VariableTwist(Twist.FRONT_TRANSFER, Robot.Subsystems.front.grabber),
+            VariableTwist(Twist.FRONT_TRANSFER, Robot.Subsystems.back.grabber)
         )
 
         GamepadButton(Robot.gamepad1, GamepadKeys.Button.LEFT_BUMPER).whenPressed(

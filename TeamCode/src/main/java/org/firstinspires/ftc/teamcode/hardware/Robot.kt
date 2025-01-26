@@ -16,7 +16,9 @@ import com.qualcomm.robotcore.util.ElapsedTime
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx
 import dev.frozenmilk.dairy.cachinghardware.CachingServo
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.hardware.drive.mecanum.CachingMecanumDrive
+import org.firstinspires.ftc.teamcode.hardware.subsystems.NewCameraSubsystem
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Claw
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Extendo
@@ -57,6 +59,7 @@ object Robot : ISubsystem {
 
 		lateinit var drive: CachingMecanumDrive
 		lateinit var otos: OTOSSubsystem
+		lateinit var camera: NewCameraSubsystem
 
 		class GrabberSet(val enabled: Boolean = true) {
 			lateinit var grabber: Grabber
@@ -74,7 +77,7 @@ object Robot : ISubsystem {
 
 		fun all(): List<ISubsystem> = listOf(front, back)
 			.filter { it.enabled }
-			.flatMap { it.all() } + otos
+			.flatMap { it.all() } + otos + camera
 	}
 
 	object Motors {
@@ -133,6 +136,10 @@ object Robot : ISubsystem {
 
 		Subsystems.otos = OTOSSubsystem(hw["otos"] as SparkFunOTOSCorrected)
 
+		val camera = hw.get(WebcamName::class.java, "sigma")
+
+		Subsystems.camera = NewCameraSubsystem(camera)
+
 		Subsystems.drive = CachingMecanumDrive(
 			true,
 			Motors.fl,
@@ -152,7 +159,7 @@ object Robot : ISubsystem {
         Servos.frontElbow = CachingServo(hw["frontElbow"] as Servo)
 
 		Subsystems.front.claw = Claw(Servos.frontClaw, Globals.Bounds.Front.claw)
-		Subsystems.front.twist = Twist(Servos.frontTwist, Globals.Bounds.Front.twist)
+		Subsystems.front.twist = Twist(Servos.frontTwist, Globals.Bounds.Front.twist, 0.5)
 		Subsystems.front.wrist = Wrist(Servos.frontWrist, Globals.Bounds.Front.wrist)
 		Subsystems.front.elbow = Elbow(Servos.frontElbow, Globals.Bounds.Front.elbow)
 
