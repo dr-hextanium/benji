@@ -34,7 +34,7 @@ class TwoSpecimen : AutoOpMode(Pose(8.5, 65.0, -PI)) {
                 )
             )
             .setLinearHeadingInterpolation(Math.toRadians(-180.0), Math.toRadians(-180.0))
-            .setZeroPowerAccelerationMultiplier(0.1)
+            .setZeroPowerAccelerationMultiplier(0.001)
             .build()
 
         val initialSetup = follower.pathBuilder()
@@ -170,7 +170,7 @@ class TwoSpecimen : AutoOpMode(Pose(8.5, 65.0, -PI)) {
 //            .setLinearHeadingInterpolation(Math.toRadians(-180.0), Math.toRadians(0.0))
 //            .build()
 
-        follower.setMaxPower(0.6)
+//        follower.holdPoint(Point(39.000, 78.000))
 
         commands.add(
             SequentialCommandGroup(

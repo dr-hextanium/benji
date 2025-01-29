@@ -26,6 +26,7 @@ public class FConstants {
         FollowerConstants.yMovement = 49.5;
 
         FollowerConstants.forwardZeroPowerAcceleration = -36.65;
+//        FollowerConstants.lateralZeroPowerAcceleration = -72.95;
         FollowerConstants.lateralZeroPowerAcceleration = -72.95;
 
         FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.1, 0.0, 0.0, 0.0);
