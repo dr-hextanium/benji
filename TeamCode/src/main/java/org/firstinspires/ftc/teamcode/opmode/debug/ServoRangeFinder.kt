@@ -1,8 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmode.debug
 
+import com.arcrobotics.ftclib.command.CommandScheduler
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.firstinspires.ftc.teamcode.command.core.VariableElbow
+import org.firstinspires.ftc.teamcode.command.core.VariableTwist
+import org.firstinspires.ftc.teamcode.command.core.VariableWrist
 import org.firstinspires.ftc.teamcode.hardware.Robot
+import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
 import org.firstinspires.ftc.teamcode.hardware.subsystems.IPositionable
+import org.firstinspires.ftc.teamcode.hardware.subsystems.Twist
+import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
 import org.firstinspires.ftc.teamcode.opmode.BasedOpMode
 
 @TeleOp(group = "Debug")
@@ -11,17 +18,18 @@ class ServoRangeFinder : BasedOpMode() {
 	var start = 0.0
 	var end = 0.5
 
-	val subsystem: IPositionable by lazy { Robot.Subsystems.front.twist }
+	val subsystem: IPositionable by lazy { Robot.Subsystems.back.elbow }
+
 
 	override fun initialize() {
-//		CommandScheduler.getInstance().schedule(
-//			VariableWrist(Wrist.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.wrist),
-//			VariableElbow(Elbow.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.elbow),
+		CommandScheduler.getInstance().schedule(
+			VariableWrist(Wrist.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.wrist),
+			VariableElbow(Elbow.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.elbow),
 //			VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
-//			VariableTwist(Twist.MIDDLE, Robot.Subsystems.back.grabber),
-//			VariableTwist(Twist.MIDDLE, Robot.Subsystems.front.grabber)
-//		)
-//		CommandScheduler.getInstance().run()
+			VariableTwist(Twist.BACK_TRANSFER, Robot.Subsystems.back.grabber),
+			VariableTwist(Twist.FRONT_TRANSFER, Robot.Subsystems.front.grabber)
+		)
+		CommandScheduler.getInstance().run()
 	}
 
 	override fun cycle() {

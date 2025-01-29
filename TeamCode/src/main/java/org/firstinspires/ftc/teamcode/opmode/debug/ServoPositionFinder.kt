@@ -30,38 +30,23 @@ class ServoPositionFinder : BasedOpMode() {
 	private var elbowPosition = 0.5
 	private var wristPosition = 0.5
 
-	private val elbow: IPositionable by lazy { Robot.Subsystems.front.elbow }
-	private val wrist: IPositionable by lazy { Robot.Subsystems.front.wrist }
+	private val elbow: IPositionable by lazy { Robot.Subsystems.back.elbow }
+	private val wrist: IPositionable by lazy { Robot.Subsystems.back.wrist }
 
 
 	override fun initialize() {
 		//TODO: Do back as well
-		elbow.bound(Front.elbow)
-		wrist.bound(Front.wrist)
+		elbow.bound(Globals.Bounds.Back.elbow)
+		wrist.bound(Globals.Bounds.Back.wrist)
 
 		CommandScheduler.getInstance().schedule(
-			VariableWrist(Wrist.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.wrist),
-			VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
+			VariableWrist(Wrist.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.wrist),
+			VariableElbow(Elbow.FRONT_TO_TRANSFER, Robot.Subsystems.front.grabber.elbow),
+//			VariableElbow(Elbow.BACK_TO_TRANSFER, Robot.Subsystems.back.grabber.elbow),
 			VariableTwist(Twist.BACK_TRANSFER, Robot.Subsystems.back.grabber),
-			VariableTwist(Twist.FRONT_INTAKE, Robot.Subsystems.front.grabber)
+			VariableTwist(Twist.FRONT_TRANSFER, Robot.Subsystems.front.grabber)
 		)
 		CommandScheduler.getInstance().run()
-
-		GamepadButton(Robot.gamepad1, GamepadKeys.Button.DPAD_LEFT).whenPressed(
-			ConditionalCommand(
-				OpenClaw(Robot.Subsystems.front.grabber),
-				CloseClaw(Robot.Subsystems.front.grabber)
-			)
-			{ Robot.Subsystems.front.grabber.claw.position == Claw.CLOSED }
-		)
-
-		GamepadButton(Robot.gamepad1, GamepadKeys.Button.DPAD_RIGHT).whenPressed(
-			ConditionalCommand(
-				OpenClaw(Robot.Subsystems.front.grabber),
-				CloseClaw(Robot.Subsystems.front.grabber)
-			)
-			{ Robot.Subsystems.front.grabber.claw.position == Claw.CLOSED }
-		)
 	}
 
 	override fun cycle() {

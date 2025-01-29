@@ -17,14 +17,17 @@ class Elbow(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsy
 	override fun write() = super.write()
 
 	companion object {
-		const val FRONT_TO_TRANSFER = 0.886 //0.883 //0.950 //0.914 //0.958 //1.0
+		const val FRONT_TO_TRANSFER = 0.938 // 0.886 //0.883
 		const val FRONT_DOWN = 0.0 //0.05
 		const val FRONT_INTERMEDIATE = 0.414 //0.205
 		const val FRONT_DEFAULT = 0.850 //0.850
 
-		const val BACK_TO_TRANSFER = 0.094 //0.029
-		const val BACK_TO_DEPOSIT = 1.0
+		const val BACK_TO_TRANSFER = 0.323 //0.094
+		const val BACK_TO_DEPOSIT = 0.615 // 1.0
 		const val BACK_SPECIMEN_DEPOSIT = 0.198 //0.594
+
+		const val BACK_SPEC_GRAB = 1.0
+
 //		const val BACK_DEFAULT = 0.5
 	}
 }
