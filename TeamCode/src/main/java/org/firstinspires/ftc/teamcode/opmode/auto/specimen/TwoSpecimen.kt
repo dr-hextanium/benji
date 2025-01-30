@@ -1,24 +1,21 @@
-package org.firstinspires.ftc.teamcode.opmode.auto
+package org.firstinspires.ftc.teamcode.opmode.auto.specimen
 
 import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.CommandScheduler
-import com.arcrobotics.ftclib.command.ParallelCommandGroup
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
-import com.arcrobotics.ftclib.command.WaitCommand
 import com.pedropathing.localization.Pose
 import com.pedropathing.pathgen.BezierCurve
 import com.pedropathing.pathgen.BezierLine
 import com.pedropathing.pathgen.Point
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import org.firstinspires.ftc.teamcode.command.auto.DepositToBasket
 import org.firstinspires.ftc.teamcode.command.auto.PedroPathCommand
-import org.firstinspires.ftc.teamcode.command.core.OpenClaw
 import org.firstinspires.ftc.teamcode.command.core.VariableElbow
 import org.firstinspires.ftc.teamcode.command.core.VariableWrist
 import org.firstinspires.ftc.teamcode.hardware.Robot.Subsystems.back
 import org.firstinspires.ftc.teamcode.hardware.Robot.Subsystems.front
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Elbow
 import org.firstinspires.ftc.teamcode.hardware.subsystems.Wrist
+import org.firstinspires.ftc.teamcode.opmode.auto.AutoOpMode
 import kotlin.math.PI
 
 @Autonomous
