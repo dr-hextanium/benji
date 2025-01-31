@@ -26,6 +26,6 @@ class Wrist(override val servo: Servo, val bound: Globals.Bounds.Bound) : ISubsy
 		const val BACK_TO_DEPOSIT = 0.959 // 1.0
 		const val BACK_DEFAULT = 0.610 // 0.578
 		const val BACK_SPECIMEN_DEPOSIT = 0.95
-		const val BACK_SPEC_GRAB = 0.825
+		const val BACK_SPEC_GRAB = 0.950
 	}
 }

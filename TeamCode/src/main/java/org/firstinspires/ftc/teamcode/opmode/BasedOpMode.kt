@@ -63,13 +63,14 @@ abstract class BasedOpMode : OpMode() {
 		Robot.hubs.forEach { it.clearBulkCache() }
 
 		Robot.read()
-//		Robot.update()
+
+		if (Globals.AUTO) { Robot.update() }
 
 		cycle()
 
 		Robot.scheduler.run()
 
-//		Robot.write()
+		if (Globals.AUTO) { Robot.write() }
 
 		telemetry.addData("left x", gamepad.leftX)
 		telemetry.addData("left y", gamepad.leftY)
